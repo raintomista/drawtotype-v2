@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom';
+import Builder from 'components/Builder';
 
-const App = () => (
-  <h1>Hello World</h1>
-);
+const App = () => <Builder />;
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById('root'));
