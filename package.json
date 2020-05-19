@@ -1,0 +1,32 @@
+{
+  "name": "drawtotype-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/App.tsx",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
+    "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx}",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rain Tomista <rstomista@up.edu.ph>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-react": "^7.9.4",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "eslint": "^7.0.0",
+    "eslint-config-airbnb-typescript-prettier": "^2.1.1",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.2"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
