@@ -18,7 +18,9 @@ const ItemWrapper = styled.div`
 `;
 
 const Item = (props) => (
-  <ItemWrapper className={props.className}>{props.text}</ItemWrapper>
+  <ItemWrapper className={props.className}>
+    {props.text}
+  </ItemWrapper>
 );
 
 export default Item;

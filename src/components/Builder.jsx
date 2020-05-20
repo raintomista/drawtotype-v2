@@ -9,11 +9,6 @@ const BuilderWrapper = styled.aside`
 `;
 
 const Builder = () => {
-  const [groupItems, setGroupItems] = useState([
-    [true, false, false, false],
-    [false, false, false, false],
-    [false, false, false, false],
-  ]);
   return (
     <BuilderWrapper>
       <Sidebar />

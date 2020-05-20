@@ -5,8 +5,8 @@
   "main": "src/App.tsx",
   "scripts": {
     "dev": "parcel src/index.html",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
-    "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx}",
+    "format": "prettier --write src/**/*.{js,jsx}",
+    "lint": "eslint --fix src/**/*.{js,jsx}",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Rain Tomista <rstomista@up.edu.ph>",
@@ -16,16 +16,11 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-transform-react-jsx": "^7.9.4",
     "@babel/preset-react": "^7.9.4",
-    "@types/react": "^16.9.35",
-    "@types/react-dom": "^16.9.8",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
-    "eslint": "^7.0.0",
-    "eslint-config-airbnb-typescript-prettier": "^2.1.1",
     "parcel-bundler": "^1.12.4",
-    "prettier": "^2.0.5",
-    "typescript": "^3.9.2"
+    "prettier": "^2.0.5"
   },
   "dependencies": {
     "@emotion/babel-preset-css-prop": "^10.0.27",

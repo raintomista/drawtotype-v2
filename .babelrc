@@ -16,7 +16,9 @@
       {
         "root": ["./src"],
         "alias": {
-          "components": "./src/components"
+          "components": "./src/components",
+          "context": "./src/context",
+          "reducers": "./src/reducers"
         }
       }
     ]
