@@ -38,10 +38,10 @@ const Board = styled.div`
   border: 1px solid #000000;
   min-height: 400px;
   min-width: 250px;
-  :nth-child(n + 5) {
+  :nth-of-type(n + 5) {
     margin-top: 20px;
   }
-  :not(:nth-child(4n)) {
+  :not(:nth-of-type(4n)) {
     margin-right: 20px;
   }
 `

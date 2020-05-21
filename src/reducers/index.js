@@ -1,6 +1,6 @@
 import {
   sidebarReducer
-} from 'reducers/sidebarReducer';
+} from 'reducers/sidebar';
 
 export const mainReducer = ({
   sidebar
