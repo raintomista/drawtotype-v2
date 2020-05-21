@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
+import { useStateValue } from 'hooks/useStateValue'
 
 const Wrapper = styled.div`
   max-height: 100vh;
@@ -47,6 +48,7 @@ const Board = styled.div`
 `
 
 const Canvas = () => {
+  const { state } = useStateValue()
   const canvasRef = useRef()
   let isMouseDown = false
   let startX, startY, scrollLeft, scrollTop
@@ -97,13 +99,9 @@ const Canvas = () => {
       onMouseLeave={handleMouseLeave}
     >
       <Boards>
-        <Board />
-        <Board />
-        <Board />
-        <Board />
-        <Board />
-        <Board />
-        <Board />
+        {state.sidebar.screens.map((screen, index) => (
+          <Board />
+        ))}
       </Boards>
     </Wrapper>
   )
