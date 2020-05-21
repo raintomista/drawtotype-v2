@@ -6,6 +6,9 @@ import { StateProvider } from 'state'
 
 const App = () => {
   const initialState = {
+    canvas: {
+      zoomLevel: 1
+    },
     sidebar: {
       mode: 'view-only',
       screens: []

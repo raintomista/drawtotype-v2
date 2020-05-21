@@ -19,8 +19,8 @@
           "components": "./src/components",
           "context": "./src/context",
           "helpers": "./src/helpers",
-          "hooks": "./src/hooks",
-          "reducers": "./src/reducers"
+          "reducers": "./src/reducers",
+          "utils": "./src/utils"
         }
       }
     ]
