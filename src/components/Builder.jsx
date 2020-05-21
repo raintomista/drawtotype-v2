@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 import Sidebar from 'components/Sidebar';
+import { getScreens } from 'helpers/getScreens';
+import { useStateValue } from 'hooks/useStateValue';
 
 const BuilderWrapper = styled.aside`
   display: grid;
@@ -9,6 +11,15 @@ const BuilderWrapper = styled.aside`
 `;
 
 const Builder = () => {
+  const { dispatch } = useStateValue();
+
+  useEffect(() => {
+    dispatch({
+      type: 'SET_SCREENS',
+      screens: getScreens()
+    });
+  }, []);
+
   return (
     <BuilderWrapper>
       <Sidebar />

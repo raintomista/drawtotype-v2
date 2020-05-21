@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Group from 'components/Sidebar/Group';
+import { useStateValue } from 'hooks/useStateValue';
 
 const SidebarWrapper = styled.div`
   background-color: #211f27;
@@ -13,13 +14,21 @@ const SidebarWrapper = styled.div`
   }
 `;
 
-const Sidebar = () => (
-  <SidebarWrapper>
-    <Group text="Screen 1" index={0} />
-    <Group text="Screen 2" index={1} />
-    <Group text="Screen 3" index={2} />
-    <Group text="Screen 4" index={3} />
-  </SidebarWrapper>
-);
+const Sidebar = () => {
+  const { state } = useStateValue();
+  return (
+    <SidebarWrapper>
+      {state.sidebar.screens.map((screen, index) => (
+        <Group
+          text={screen.name}
+          items={screen.components}
+          collapsed={screen.collapsed}
+          index={index}
+          key={index}
+        />
+      ))}
+    </SidebarWrapper>
+  );
+};
 
 export default Sidebar;

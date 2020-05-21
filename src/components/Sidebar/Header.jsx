@@ -31,12 +31,13 @@ const HeaderText = styled.h2`
   padding: 12px 0px;
 `;
 
-const Header = ({ index, text }) => {
-  const { state, dispatch } = useStateValue();
+const Header = props => {
+  const { dispatch } = useStateValue();
+
   const handleToggle = () => {
     dispatch({
-      type: 'TOGGLE_HEADER',
-      index: index
+      type: 'TOGGLE_COLLAPSED',
+      index: props.index
     });
   };
 
@@ -44,11 +45,11 @@ const Header = ({ index, text }) => {
     <HeaderWrapper>
       <HeaderBtn
         onClick={handleToggle}
-        className={state.sidebar.headerCollapsed[index] ? 'collapsed' : ''}
+        className={props.collapsed ? 'collapsed' : ''}
       >
-        &#x25BC;
+        &#x25B2;
       </HeaderBtn>
-      <HeaderText>{text}</HeaderText>
+      <HeaderText>{props.text}</HeaderText>
     </HeaderWrapper>
   );
 };

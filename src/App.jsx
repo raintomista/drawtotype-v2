@@ -7,12 +7,15 @@ import { StateProvider } from 'state';
 const App = () => {
   const initialState = {
     sidebar: {
-      headerCollapsed: [true, false, false, false]
+      screens: []
     }
   };
 
   return (
-    <StateProvider reducer={mainReducer} initialState={initialState}>
+    <StateProvider
+      reducer={mainReducer}
+      initialState={initialState}
+    >
       <Builder />
     </StateProvider>
   );
