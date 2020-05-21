@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import TitleBar from 'components/Sidebar/TitleBar';
 import Group from 'components/Sidebar/Group';
 import { useStateValue } from 'hooks/useStateValue';
 
@@ -18,6 +19,7 @@ const Sidebar = () => {
   const { state } = useStateValue();
   return (
     <SidebarWrapper>
+      <TitleBar text="Screens" />
       {state.sidebar.screens.map((screen, index) => (
         <Group
           text={screen.name}
