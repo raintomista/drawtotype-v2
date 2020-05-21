@@ -1,6 +1,9 @@
-export const toggleReducer = (state, action) => {
-  switch (action.type) {
-    case 'TOGGLE':
-      return !state;
-  }
-};
+import {
+  sidebarReducer
+} from 'reducers/sidebarReducer';
+
+export const mainReducer = ({
+  sidebar
+}, action) => ({
+  sidebar: sidebarReducer(sidebar, action),
+});

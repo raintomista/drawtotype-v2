@@ -18,6 +18,7 @@
         "alias": {
           "components": "./src/components",
           "context": "./src/context",
+          "hooks": "./src/hooks",
           "reducers": "./src/reducers"
         }
       }
