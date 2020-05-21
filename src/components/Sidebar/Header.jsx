@@ -41,6 +41,17 @@ const Header = props => {
     });
   };
 
+  const handleAdd = () => {
+    dispatch({
+      type: 'ADD_COMPONENT',
+      screenIndex: props.index,
+      componentType: prompt(
+        'Enter component type',
+        'HeaderWithMenu'
+      )
+    });
+  };
+
   return (
     <HeaderWrapper>
       <HeaderBtn
@@ -50,6 +61,7 @@ const Header = props => {
         &#x25B2;
       </HeaderBtn>
       <HeaderText>{props.text}</HeaderText>
+      <HeaderBtn onClick={handleAdd}>+</HeaderBtn>
     </HeaderWrapper>
   );
 };
