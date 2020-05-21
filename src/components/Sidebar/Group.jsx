@@ -1,7 +1,6 @@
-import React from 'react';
-import Header from 'components/Sidebar/Header';
-import Item from 'components/Sidebar/Item';
-import { useStateValue } from 'hooks/useStateValue';
+import React from 'react'
+import Header from 'components/Sidebar/Header'
+import Item from 'components/Sidebar/Item'
 
 const Group = props => (
   <React.Fragment>
@@ -10,11 +9,11 @@ const Group = props => (
       collapsed={props.collapsed}
       index={props.index}
     />
-    {props.collapsed &&
+    {!props.collapsed &&
       props.items.map((item, index) => (
         <Item text={item.type} key={index} />
       ))}
   </React.Fragment>
-);
+)
 
-export default Group;
+export default Group

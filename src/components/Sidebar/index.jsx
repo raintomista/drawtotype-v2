@@ -1,8 +1,9 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import TitleBar from 'components/Sidebar/TitleBar';
-import Group from 'components/Sidebar/Group';
-import { useStateValue } from 'hooks/useStateValue';
+import React from 'react'
+import styled from '@emotion/styled'
+import Group from 'components/Sidebar/Group'
+import TitleBar from 'components/Sidebar/TitleBar'
+import { HeaderInput } from 'components/Sidebar/Header'
+import { useStateValue } from 'hooks/useStateValue'
 
 const SidebarWrapper = styled.div`
   background-color: #211f27;
@@ -13,10 +14,10 @@ const SidebarWrapper = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
+`
 
 const Sidebar = () => {
-  const { state } = useStateValue();
+  const { state } = useStateValue()
   return (
     <SidebarWrapper>
       <TitleBar text="Screens" />
@@ -29,8 +30,11 @@ const Sidebar = () => {
           key={index}
         />
       ))}
+      {state.sidebar.mode === 'add-screen' && (
+        <HeaderInput autoFocus={true} />
+      )}
     </SidebarWrapper>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar
