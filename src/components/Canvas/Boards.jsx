@@ -3,16 +3,22 @@ import { useStateValue } from 'hooks/useStateValue'
 
 const Boards = ({ children }) => {
   const { state } = useStateValue()
+
+  const zoomScaling = basePx =>
+    `${basePx * state.canvas.zoomLevel}px`
+
   return (
     <div
       css={css`
+        align-items: center;
         background-color: #151515;
         box-sizing: content-box;
         display: flex;
-        min-width: 100vw;
         flex-wrap: wrap;
-        padding: 20vw;
-        transform: scale(${state.canvas.zoomLevel});
+        justify-content: center;
+        min-width: ${zoomScaling(1060)};
+        max-width: ${zoomScaling(1060)};
+        padding: 25%;
         width: max-content;
       `}
     >
