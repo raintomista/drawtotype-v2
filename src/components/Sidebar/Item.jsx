@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from '@emotion/styled';
+import React from 'react'
+import styled from '@emotion/styled'
 
 const ItemWrapper = styled.div`
   color: #ffffff;
@@ -15,12 +15,24 @@ const ItemWrapper = styled.div`
   &.active {
     background-color: #288dfd;
   }
-`;
+`
 
-const Item = (props) => (
-  <ItemWrapper className={props.className}>
-    {props.text}
-  </ItemWrapper>
-);
+const Item = ({
+  componentIndex,
+  selectedScreen,
+  selectedComponent,
+  screenIndex,
+  text
+}) => {
+  const isSelected =
+    selectedScreen === screenIndex &&
+    selectedComponent === componentIndex
 
-export default Item;
+  return (
+    <ItemWrapper className={isSelected ? 'active' : ''}>
+      {text}
+    </ItemWrapper>
+  )
+}
+
+export default Item

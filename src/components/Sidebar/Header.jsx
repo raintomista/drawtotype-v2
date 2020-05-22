@@ -80,20 +80,20 @@ export const HeaderInput = props => {
   )
 }
 
-const Header = props => {
+const Header = ({ collapsed, screenIndex, text }) => {
   const { dispatch } = useStateValue()
 
   const handleToggle = () => {
     dispatch({
       type: types.SIDEBAR_TOGGLE_COLLAPSED,
-      index: props.index
+      screenIndex: screenIndex
     })
   }
 
   const handleAdd = () => {
     dispatch({
       type: types.SIDEBAR_ADD_COMPONENT,
-      screenIndex: props.index,
+      screenIndex: screenIndex,
       componentType: prompt(
         'Enter component type',
         'HeaderWithMenu'
@@ -105,11 +105,11 @@ const Header = props => {
     <HeaderWrapper>
       <HeaderBtn
         onClick={handleToggle}
-        className={props.collapsed ? 'collapsed' : ''}
+        className={collapsed ? 'collapsed' : ''}
       >
         &#x25B2;
       </HeaderBtn>
-      <HeaderText>{props.text}</HeaderText>
+      <HeaderText>{text}</HeaderText>
       <HeaderBtn onClick={handleAdd}>+</HeaderBtn>
     </HeaderWrapper>
   )

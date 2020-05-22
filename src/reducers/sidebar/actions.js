@@ -1,9 +1,14 @@
-/* prettier-ignore */
+export const addScreen = (state, action) => {
+  const {
+    screens
+  } = state
 
-export const addScreen = (state, props) => {
-  const screens = state.screens;
+  const {
+    screenName
+  } = action
+
   screens.push({
-    name: props.screenName,
+    name: screenName,
     collapsed: false,
     components: []
   })
@@ -14,10 +19,18 @@ export const addScreen = (state, props) => {
   }
 }
 
-export const addComponent = (state, props) => {
-  const screens = state.screens;
-  screens[props.screenIndex].components.push({
-    type: props.componentType
+export const addComponent = (state, action) => {
+  const {
+    screens
+  } = state
+
+  const {
+    screenIndex,
+    componentType
+  } = action
+
+  screens[screenIndex].components.push({
+    type: componentType
   });
 
   return {
@@ -26,23 +39,51 @@ export const addComponent = (state, props) => {
   }
 }
 
-export const setMode = (state, props) => {
+export const selectComponent = (state, action) => {
+  const {
+    screenIndex,
+    componentIndex
+  } = action
+
   return {
     ...state,
-    mode: props.mode
+    selectedScreen: screenIndex,
+    selectedComponent: componentIndex
   }
 }
 
-export const setScreens = (state, props) => {
+export const setMode = (state, action) => {
+  const {
+    mode
+  } = action
+
   return {
     ...state,
-    screens: props.screens
+    mode: mode
   }
 }
 
-export const toggleCollapsed = (state, props) => {
-  const screens = state.screens
-  screens[props.index].collapsed = !screens[props.index].collapsed
+export const setScreens = (state, action) => {
+  const {
+    screens
+  } = action
+
+  return {
+    ...state,
+    screens: screens
+  }
+}
+
+export const toggleCollapsed = (state, action) => {
+  const {
+    screens
+  } = state
+
+  const {
+    screenIndex
+  } = action
+
+  screens[screenIndex].collapsed = !screens[screenIndex].collapsed
 
   return {
     ...state,

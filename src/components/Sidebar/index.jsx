@@ -18,21 +18,30 @@ const SidebarWrapper = styled.div`
 
 const Sidebar = () => {
   const { state } = useStateValue()
+  const {
+    mode,
+    selectedScreen,
+    selectedComponent,
+    screens
+  } = state.sidebar
+
   return (
     <SidebarWrapper>
       <TitleBar text="Screens" />
-      {state.sidebar.screens.map((screen, index) => (
+
+      {screens.map((screen, screenIndex) => (
         <Group
-          text={screen.name}
-          items={screen.components}
+          key={screenIndex}
           collapsed={screen.collapsed}
-          index={index}
-          key={index}
+          components={screen.components}
+          screenIndex={screenIndex}
+          selectedScreen={selectedScreen}
+          selectedComponent={selectedComponent}
+          text={screen.name}
         />
       ))}
-      {state.sidebar.mode === 'add-screen' && (
-        <HeaderInput autoFocus={true} />
-      )}
+
+      {mode === 'add-screen' && <HeaderInput autoFocus={true} />}
     </SidebarWrapper>
   )
 }

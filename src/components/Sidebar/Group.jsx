@@ -2,16 +2,30 @@ import React from 'react'
 import Header from 'components/Sidebar/Header'
 import Item from 'components/Sidebar/Item'
 
-const Group = props => (
+const Group = ({
+  collapsed,
+  components,
+  screenIndex,
+  selectedScreen,
+  selectedComponent,
+  text
+}) => (
   <React.Fragment>
     <Header
-      text={props.text}
-      collapsed={props.collapsed}
-      index={props.index}
+      collapsed={collapsed}
+      screenIndex={screenIndex}
+      text={text}
     />
-    {!props.collapsed &&
-      props.items.map((item, index) => (
-        <Item text={item.type} key={index} />
+    {!collapsed &&
+      components.map((component, componentIndex) => (
+        <Item
+          key={componentIndex}
+          componentIndex={componentIndex}
+          screenIndex={screenIndex}
+          selectedScreen={selectedScreen}
+          selectedComponent={selectedComponent}
+          text={component.type}
+        />
       ))}
   </React.Fragment>
 )
