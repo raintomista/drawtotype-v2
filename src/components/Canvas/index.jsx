@@ -56,8 +56,12 @@ const Canvas = () => {
       onMouseLeave={handleMouseLeave}
     >
       <Boards>
-        {state.sidebar.screens.map((screen, index) => (
-          <Board key={index} />
+        {state.sidebar.screens.map((screen, screenIndex) => (
+          <Board
+            key={screenIndex}
+            screenIndex={screenIndex}
+            components={screen.components}
+          />
         ))}
       </Boards>
     </Wrapper>

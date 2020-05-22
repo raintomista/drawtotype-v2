@@ -13,8 +13,8 @@ const HeaderWithMenu = props => {
     <div
       css={css`
         position: sticky;
-        top: 0;
-        left: 0;
+        left: 0px;
+        top: 0px;
         width: 100%;
         font-size: ${zoomScaling(16)};
         height: ${zoomScaling(40)};
@@ -29,26 +29,47 @@ const HeaderWithMenu = props => {
   )
 }
 
-const Image = () => {
-  const { state } = useStateValue()
+const Image = props => {
+  const { state, dispatch } = useStateValue()
+
+  const isSelected =
+    state.sidebar.selectedScreen === props.screenIndex &&
+    state.sidebar.selectedComponent === props.componentIndex
 
   const zoomScaling = basePx =>
     `${basePx * state.canvas.zoomLevel}px`
 
   return (
     <img
+      onClick={() => {
+        dispatch({
+          type: 'SIDEBAR_SELECT_COMPONENT',
+          screenIndex: props.screenIndex,
+          componentIndex: props.componentIndex
+        })
+      }}
       css={css`
         background: #cecece;
-        margin: ${zoomScaling(12)};
-        padding-top: calc((100% - ${zoomScaling(24)}) * (3 / 4));
-        width: calc(100% - ${zoomScaling(24)});
+        border: ${isSelected
+          ? ' 2px solid #288dfd80'
+          : '2px solid transparent'};
+        box-shadow: ${isSelected
+          ? ' 0 0 8px -1px #288dfd'
+          : '0 0 0 0 #288dfd'};
+        cursor: pointer;
+        display: block;
+        padding-top: calc(100% * (3 / 4));
+        width: 100%;
+        :not(:last-of-type) {
+          margin-bottom: ${zoomScaling(12)};
+        }
       `}
     />
   )
 }
 
 const FAB = () => {
-  const { state } = useStateValue()
+  const { state, dispatch } = useStateValue()
 
   const zoomScaling = basePx =>
     `${basePx * state.canvas.zoomLevel}px`
@@ -88,6 +109,7 @@ const BoardWrapper = props => {
         max-width: ${zoomScaling(250)};
         min-height: ${zoomScaling(400)};
         min-width: ${zoomScaling(250)};
+        padding: ${zoomScaling(12)};
         overflow-y: scroll;
         &::-webkit-scrollbar {
           display: none;
@@ -105,14 +127,22 @@ const BoardWrapper = props => {
   )
 }
 
-const Board = () => (
+const Board = props => (
   <BoardWrapper>
-    <HeaderWithMenu>Hhahah</HeaderWithMenu>
-    <Image />
-    <Image />
-    <Image />
-    <Image />
-    <FAB />
+    {props.components.map((component, componentIndex) => {
+      switch (component.type) {
+        case 'Image':
+          return (
+            <Image
+              componentIndex={componentIndex}
+              screenIndex={props.screenIndex}
+              key={componentIndex}
+            />
+          )
+        default:
+          return
+      }
+    })}
   </BoardWrapper>
 )
 

@@ -11,7 +11,9 @@ const App = () => {
     },
     sidebar: {
       mode: 'view-only',
-      screens: []
+      screens: [],
+      selectedScreen: null,
+      selectedComponent: null
     }
   }
 
