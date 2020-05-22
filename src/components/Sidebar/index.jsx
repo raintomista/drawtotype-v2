@@ -17,7 +17,7 @@ const SidebarWrapper = styled.div`
 `
 
 const Sidebar = () => {
-  const { state } = useStateValue()
+  const { state, dispatch } = useStateValue()
   const {
     mode,
     selectedScreen,
@@ -34,6 +34,7 @@ const Sidebar = () => {
           key={screenIndex}
           collapsed={screen.collapsed}
           components={screen.components}
+          dispatch={dispatch}
           screenIndex={screenIndex}
           selectedScreen={selectedScreen}
           selectedComponent={selectedComponent}

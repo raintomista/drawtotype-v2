@@ -5,6 +5,7 @@ import Item from 'components/Sidebar/Item'
 const Group = ({
   collapsed,
   components,
+  dispatch,
   screenIndex,
   selectedScreen,
   selectedComponent,
@@ -21,6 +22,7 @@ const Group = ({
         <Item
           key={componentIndex}
           componentIndex={componentIndex}
+          dispatch={dispatch}
           screenIndex={screenIndex}
           selectedScreen={selectedScreen}
           selectedComponent={selectedComponent}
