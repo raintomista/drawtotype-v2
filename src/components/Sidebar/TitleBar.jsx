@@ -3,6 +3,10 @@ import styled from '@emotion/styled'
 import { useStateValue } from 'hooks/useStateValue'
 
 const Wrapper = styled.div`
+  position: sticky;
+  top: 0;
+  left: 0;
+  background-color: #211f27;
   color: #ffffff;
   display: grid;
   font-size: 16px;
