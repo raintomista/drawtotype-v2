@@ -33,9 +33,7 @@ const HeaderText = styled.h2`
   padding: 12px 0px;
 `
 
-export const HeaderInput = props => {
-  const { dispatch } = useStateValue()
-
+export const HeaderInput = ({ dispatch, ...props }) => {
   const handleBlur = event => {
     // Trim whitespaces
     const screenName = event.target.value.trim()
@@ -80,9 +78,7 @@ export const HeaderInput = props => {
   )
 }
 
-const Header = ({ collapsed, screenIndex, text }) => {
-  const { dispatch } = useStateValue()
-
+const Header = ({ collapsed, dispatch, screenIndex, text }) => {
   const handleToggle = () => {
     dispatch({
       type: types.SIDEBAR_TOGGLE_COLLAPSED,
@@ -107,7 +103,7 @@ const Header = ({ collapsed, screenIndex, text }) => {
         onClick={handleToggle}
         className={collapsed ? 'collapsed' : ''}
       >
-        &#x25B2;
+        &#x25BC;
       </HeaderBtn>
       <HeaderText>{text}</HeaderText>
       <HeaderBtn onClick={handleAdd}>+</HeaderBtn>

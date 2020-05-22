@@ -42,7 +42,9 @@ const Sidebar = () => {
         />
       ))}
 
-      {mode === 'add-screen' && <HeaderInput autoFocus={true} />}
+      {mode === 'add-screen' && (
+        <HeaderInput autoFocus={true} dispatch={dispatch} />
+      )}
     </SidebarWrapper>
   )
 }

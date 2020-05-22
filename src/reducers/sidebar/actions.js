@@ -29,12 +29,19 @@ export const addComponent = (state, action) => {
     componentType
   } = action
 
+  screens[screenIndex].collapsed = false
   screens[screenIndex].components.push({
     type: componentType
   });
 
+  const selectedScreen = screenIndex
+  const selectedComponent = screens[screenIndex].components.length - 1
+
+
   return {
     ...state,
+    selectedScreen: selectedScreen,
+    selectedComponent: selectedComponent,
     screens
   }
 }

@@ -14,6 +14,7 @@ const Group = ({
   <React.Fragment>
     <Header
       collapsed={collapsed}
+      dispatch={dispatch}
       screenIndex={screenIndex}
       text={text}
     />
