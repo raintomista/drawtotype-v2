@@ -1,149 +1,160 @@
 import React from 'react'
 import { css } from '@emotion/core'
-import styled from '@emotion/styled'
 import { useStateValue } from 'hooks/useStateValue'
+import { isSelectedComponent as isSelected } from 'utils/isSelected'
+import { zoomScaling } from 'utils/zoomScaling'
 
 const HeaderWithMenu = props => {
   const { state } = useStateValue()
+  const { zoomLevel } = state.canvas
 
-  const zoomScaling = basePx =>
-    `${basePx * state.canvas.zoomLevel}px`
+  const style = css`
+    position: sticky;
+    left: 0px;
+    top: 0px;
+    background-color: blue;
+    color: white;
+    font-size: ${zoomScaling(16, zoomLevel)};
+    height: ${zoomScaling(40, zoomLevel)};
+    padding: ${zoomScaling(12, zoomLevel)};
+    line-height: ${zoomScaling(16, zoomLevel)};
+    width: 100%;
+  `
 
   return (
-    <div
-      css={css`
-        position: sticky;
-        left: 0px;
-        top: 0px;
-        width: 100%;
-        font-size: ${zoomScaling(16)};
-        height: ${zoomScaling(40)};
-        padding: ${zoomScaling(12)};
-        background-color: blue;
-        color: white;
-        line-height: ${zoomScaling(16)};
-      `}
-    >
+    <div css={style}>
       {props.children}
     </div>
   )
 }
 
-const Image = props => {
+const Image = ({ screenIndex, componentIndex }) => {
   const { state, dispatch } = useStateValue()
+  const selectedA = state.sidebar.selectedScreen
+  const selectedB = state.sidebar.selectedComponent
+  const currentTool = state.toolbar.currentTool
+  const zoomLevel = state.canvas.zoomLevel
 
-  const isSelected =
-    state.sidebar.selectedScreen === props.screenIndex &&
-    state.sidebar.selectedComponent === props.componentIndex
+  const getBorder = () => 
+    isSelected(selectedA, selectedB, screenIndex, componentIndex)
+      ? '2px solid #288dfd80'
+      : '2px solid transparent'
+  
+  const getBoxShadow = () =>
+    isSelected(selectedA, selectedB, screenIndex, componentIndex)
+      ? ' 0 0 8px -1px #288dfd'
+      : '0 0 0 0 #288dfd'
 
-  const zoomScaling = basePx =>
-    `${basePx * state.canvas.zoomLevel}px`
+  const style = css`
+    background: #cecece;
+    border: ${getBorder()};
+    box-shadow: ${getBoxShadow()};
+    display: block;
+    padding-top: calc(100% * (3 / 4));
+    width: 100%;
+    :not(:last-of-type) {
+      margin-bottom: ${zoomScaling(12, zoomLevel)};
+    }
+  `
+
+  const handleClick = () => {
+    if (currentTool !== 'hand') {
+      dispatch({
+        type: 'SIDEBAR_SELECT_COMPONENT',
+        screenIndex: screenIndex,
+        componentIndex: componentIndex
+      })
+    }
+  }
 
   return (
     <img
-      onClick={() => {
-        dispatch({
-          type: 'SIDEBAR_SELECT_COMPONENT',
-          screenIndex: props.screenIndex,
-          componentIndex: props.componentIndex
-        })
-      }}
-      css={css`
-        background: #cecece;
-        border: ${isSelected
-          ? ' 2px solid #288dfd80'
-          : '2px solid transparent'};
-        box-shadow: ${isSelected
-          ? ' 0 0 8px -1px #288dfd'
-          : '0 0 0 0 #288dfd'};
-        cursor: pointer;
-        display: block;
-        padding-top: calc(100% * (3 / 4));
-        width: 100%;
-        :not(:last-of-type) {
-          margin-bottom: ${zoomScaling(12)};
-        }
-      `}
+      css={style}
+      onClick={handleClick}
     />
   )
 }
 
 const FAB = () => {
   const { state, dispatch } = useStateValue()
+  const zoomLevel = state.canvas.zoomLevel
 
-  const zoomScaling = basePx =>
-    `${basePx * state.canvas.zoomLevel}px`
+  const style = css`
+    background-color: blue;
+    border: none;
+    border-radius: 100%;
+    color: white;
+    padding: 0px;
+    position: sticky;
+    left: calc(100% - ${zoomScaling(12, zoomLevel)});
+    bottom: ${zoomScaling(12, zoomLevel)};
+    height: ${zoomScaling(35, zoomLevel)};
+    margin: ${zoomScaling(12, zoomLevel)};
+    width: ${zoomScaling(35, zoomLevel)};
+  `
 
   return (
-    <button
-      css={css`
-        background-color: blue;
-        border: none;
-        border-radius: 100%;
-        position: sticky;
-        left: calc(100% - ${zoomScaling(12)});
-        bottom: ${zoomScaling(12)};
-        margin: ${zoomScaling(12)};
-        padding: 0px;
-        color: white;
-        height: ${zoomScaling(35)};
-        width: ${zoomScaling(35)};
-      `}
-    ></button>
+    <button css={style}>
+    </button>
   )
 }
 
-const BoardWrapper = props => {
+const Container = props => {
   const { state } = useStateValue()
+  const zoomLevel = state.canvas.zoomLevel
 
-  const zoomScaling = basePx =>
-    `${basePx * state.canvas.zoomLevel}px`
+  const style = css`
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    position: relative;
+    max-height: ${zoomScaling(400, zoomLevel)};
+    max-width: ${zoomScaling(250, zoomLevel)};
+    min-height: ${zoomScaling(400, zoomLevel)};
+    min-width: ${zoomScaling(250, zoomLevel)};
+    padding: ${zoomScaling(12, zoomLevel)};
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    &:nth-of-type(n + 5) {
+      margin-top: ${zoomScaling(20, zoomLevel)};
+    }
+    &:not(:nth-of-type(4n)) {
+      margin-right: ${zoomScaling(20, zoomLevel)};
+    }
+  `
 
   return (
-    <div
-      css={css`
-        background-color: #ffffff;
-        border: 1px solid #000000;
-        position: relative;
-        max-height: ${zoomScaling(400)};
-        max-width: ${zoomScaling(250)};
-        min-height: ${zoomScaling(400)};
-        min-width: ${zoomScaling(250)};
-        padding: ${zoomScaling(12)};
-        overflow-y: scroll;
-        &::-webkit-scrollbar {
-          display: none;
-        }
-        &:nth-of-type(n + 5) {
-          margin-top: ${zoomScaling(20)};
-        }
-        &:not(:nth-of-type(4n)) {
-          margin-right: ${zoomScaling(20)};
-        }
-      `}
-    >
+    <div css={style}>
       {props.children}
     </div>
   )
 }
 
-const Board = props => (
-  <BoardWrapper>
-    {props.components.map((component, componentIndex) => {
-      switch (component.type) {
-        case 'Image':
-          return (
-            <Image
-              componentIndex={componentIndex}
-              screenIndex={props.screenIndex}
-              key={componentIndex}
-            />
-          )
-        default:
-          return
-      }
-    })}
-  </BoardWrapper>
+const Board = ({ components, componentIndex, screenIndex }) => {
+
+  const getComponent = (componentType, componentIndex) => {
+    switch(componentType) {
+      case 'Image':
+        return (
+          <Image
+            key={componentIndex}
+            componentIndex={componentIndex}
+            screenIndex={screenIndex}
+          />
+        )
+      default:
+        return
+    }
+  }
+
+  return (
+    <Container>
+      {components.map((component, componentIndex) => 
+        getComponent(component.type, componentIndex)
+      )}
+    </Container>
 )
+  }
 
 export default Board
