@@ -3,9 +3,9 @@ import styled from '@emotion/styled'
 import {
   FaMousePointer as SelectIcon,
   FaHandPaper as HandIcon
-} from "react-icons/fa";
-import * as types from 'reducers/toolbar/types'
+} from "react-icons/fa"
 import { useStateValue } from 'hooks/useStateValue'
+import types from 'reducers/types'
 
 const Container = styled.div`
   background-color: #181518;

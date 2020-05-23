@@ -45,6 +45,27 @@ const Builder = () => {
     }
   }
 
+  const keyboardShortcuts = () => {
+    const { nodeName } = event.srcElement
+    const { key } = event
+    
+    // Prevent default behavior of the event
+    event.preventDefault()
+
+    // Check if the pressed key is a shortcut
+    if (nodeName !== 'INPUT' && key === 'h') {
+      dispatch({
+        type: 'TOOLBAR_SET_TOOL',
+        currentTool: 'hand'
+      })
+    } else if (nodeName !== 'INPUT' && key === 'a') {
+      dispatch({
+        type: 'TOOLBAR_SET_TOOL',
+        currentTool: 'select'
+      })
+    }
+  }
+
   /* Retrieves the screens in the project and adds event listener for zoom
     when the component is mounted. It also removes the attached event listeners
     when the component unmounts */
@@ -52,11 +73,13 @@ const Builder = () => {
     retrieveScreens()
     document.addEventListener('keydown', zoomIn, false)
     document.addEventListener('keydown', zoomOut, false)
+    document.addEventListener('keydown', keyboardShortcuts, false)
 
     // Removes the event listeners before the component unmounts
     return () => {
       document.removeEventListener('keydown', zoomIn, false)
       document.removeEventListener('keydown', zoomOut, false)
+      document.removeEventListener('keydown', keyboardShortcuts, false)
     }
   }, [])
 

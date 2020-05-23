@@ -1,4 +1,4 @@
-import types from 'reducers/types'
+import * as types from 'reducers/sidebar/types'
 import {
   addComponent,
   addScreen,

@@ -1,7 +1,7 @@
+import * as sidebar from 'reducers/sidebar/types'
+import * as toolbar from 'reducers/toolbar/types'
+
 export default {
-  SIDEBAR_ADD_SCREEN: 'SIDEBAR_ADD_SCREEN',
-  SIDEBAR_SELECT_COMPONENT: 'SIDEBAR_SELECT_COMPONENT',
-  SIDEBAR_SET_MODE: 'SIDEBAR_SET_MODE',
-  SIDEBAR_SET_SCREENS: 'SIDEBAR_SET_SCREENS',
-  SIDEBAR_TOGGLE_COLLAPSED: 'SIDEBAR_TOGGLE_COLLAPSED',
+  ...sidebar,
+  ...toolbar
 }
