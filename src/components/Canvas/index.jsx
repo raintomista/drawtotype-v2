@@ -7,6 +7,7 @@ import Toolbar from 'components/Toolbar'
 
 const Canvas = () => {
   const { state, dispatch } = useStateValue()
+  const { currentTool } = state.toolbar
   const canvasRef = useRef()
 
   let isMouseDown = false
@@ -19,34 +20,42 @@ const Canvas = () => {
 
   const handleMouseDown = e => {
     e.preventDefault()
-    const { offsetTop, offsetLeft } = canvasRef.current
-    isMouseDown = true
-    startX = e.pageX - offsetLeft
-    startY = e.pageY - offsetTop
-    scrollLeft = canvasRef.current.scrollLeft
-    scrollTop = canvasRef.current.scrollTop
+    if (currentTool === 'hand') {
+      const { offsetTop, offsetLeft } = canvasRef.current
+      isMouseDown = true
+      startX = e.pageX - offsetLeft
+      startY = e.pageY - offsetTop
+      scrollLeft = canvasRef.current.scrollLeft
+      scrollTop = canvasRef.current.scrollTop
+    }
   }
 
   const handleMouseUp = e => {
     e.preventDefault()
-    isMouseDown = false
+    if (currentTool === 'hand') {
+      isMouseDown = false
+    }
   }
 
   const handleMouseLeave = e => {
     e.preventDefault()
-    isMouseDown = false
+    if (currentTool === 'hand') {
+      isMouseDown = false
+    }
   }
 
   const handleMouseMove = e => {
     e.preventDefault()
     const { offsetTop, offsetLeft } = canvasRef.current
-    if (!isMouseDown) return
-    const x = e.pageX - offsetLeft
-    const y = e.pageY - offsetTop
-    const walkX = (x - startX) * 1.5
-    const walkY = (y - startY) * 1.5
-    canvasRef.current.scrollLeft = scrollLeft - walkX
-    canvasRef.current.scrollTop = scrollTop - walkY
+    if (currentTool === 'hand') {
+      if (!isMouseDown) return
+      const x = e.pageX - offsetLeft
+      const y = e.pageY - offsetTop
+      const walkX = (x - startX) * 1.5
+      const walkY = (y - startY) * 1.5
+      canvasRef.current.scrollLeft = scrollLeft - walkX
+      canvasRef.current.scrollTop = scrollTop - walkY
+    }
   }
 
   return (
