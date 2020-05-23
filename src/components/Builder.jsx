@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
+
 import Sidebar from 'components/Sidebar'
 import Canvas from 'components/Canvas'
-import { useStateValue } from 'hooks/useStateValue'
+import Inspector from 'components/Inspector'
+
 import types from 'reducers/types'
+import { useStateValue } from 'hooks/useStateValue'
 import { getScreens } from 'utils/getScreens'
 
 const Container = styled.aside`
@@ -78,20 +81,21 @@ const Builder = () => {
     retrieveScreens()
     document.addEventListener('keydown', zoomIn, false)
     document.addEventListener('keydown', zoomOut, false)
-    document.addEventListener('keydown', keyboardShortcuts, false)
+    // document.addEventListener('keydown', keyboardShortcuts, false)
 
     // Removes the event listeners before the component unmounts
     return () => {
       document.removeEventListener('keydown', zoomIn, false)
       document.removeEventListener('keydown', zoomOut, false)
-      document.removeEventListener('keydown', keyboardShortcuts, false)
+      // document.removeEventListener('keydown', keyboardShortcuts, false)
     }
   }, [])
 
   return (
     <Container currentTool={currentTool}>
-      <Sidebar />
-      <Canvas />
+      <Sidebar/>
+      <Canvas/>
+      <Inspector/>
     </Container>
   )
 }
