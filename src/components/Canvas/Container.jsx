@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 
-const Wrapper = styled.div`
+const Container = styled.div`
   max-height: 100vh;
   max-width: 100%;
   overflow: scroll;
+  position: relative;
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -20,4 +21,4 @@ const Wrapper = styled.div`
   }
 `
 
-export default Wrapper
+export default Container

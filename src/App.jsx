@@ -14,6 +14,9 @@ const App = () => {
       screens: [],
       selectedScreen: null,
       selectedComponent: null
+    },
+    toolbar: {
+      currentTool: 'select'
     }
   }
 

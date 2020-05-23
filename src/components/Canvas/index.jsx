@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 import { useStateValue } from 'hooks/useStateValue'
-import Wrapper from 'components/Canvas/Wrapper'
+import Container from 'components/Canvas/Container'
 import Boards from 'components/Canvas/Boards'
 import Board from 'components/Canvas/Board'
+import Toolbar from 'components/Toolbar'
 
 const Canvas = () => {
-  const { state } = useStateValue()
+  const { state, dispatch } = useStateValue()
   const canvasRef = useRef()
+
   let isMouseDown = false
   let startX, startY, scrollLeft, scrollTop
 
@@ -48,13 +50,17 @@ const Canvas = () => {
   }
 
   return (
-    <Wrapper
+    <Container
       ref={canvasRef}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
+      <Toolbar
+        currentTool={state.toolbar.currentTool}
+        dispatch={dispatch}
+      />
       <Boards>
         {state.sidebar.screens.map((screen, screenIndex) => (
           <Board
@@ -64,7 +70,7 @@ const Canvas = () => {
           />
         ))}
       </Boards>
-    </Wrapper>
+    </Container>
   )
 }
 

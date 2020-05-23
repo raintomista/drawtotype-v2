@@ -6,7 +6,7 @@ import { useStateValue } from 'hooks/useStateValue'
 import types from 'reducers/types'
 import { getScreens } from 'utils/getScreens'
 
-const BuilderWrapper = styled.aside`
+const Container = styled.aside`
   display: grid;
   grid-template-columns: 250px calc(100% - 500px) 250px;
   background-color: #151515;
@@ -61,10 +61,10 @@ const Builder = () => {
   }, [])
 
   return (
-    <BuilderWrapper>
+    <Container>
       <Sidebar />
       <Canvas />
-    </BuilderWrapper>
+    </Container>
   )
 }
 
