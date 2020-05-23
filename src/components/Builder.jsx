@@ -10,10 +10,15 @@ const Container = styled.aside`
   display: grid;
   grid-template-columns: 250px calc(100% - 500px) 250px;
   background-color: #151515;
+  cursor: ${props => props.currentTool === 'hand'
+    ? 'grab'
+    : 'default'
+  };
 `
 
 const Builder = () => {
-  const { dispatch } = useStateValue()
+  const { state, dispatch } = useStateValue()
+  const { currentTool } = state.toolbar
 
   /* Retrieves screens in the project */
   const retrieveScreens = () => {
@@ -84,7 +89,7 @@ const Builder = () => {
   }, [])
 
   return (
-    <Container>
+    <Container currentTool={currentTool}>
       <Sidebar />
       <Canvas />
     </Container>
