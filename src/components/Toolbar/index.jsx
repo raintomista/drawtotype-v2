@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import {
-  FaMousePointer as SelectIcon,
-  FaHandPaper as HandIcon
-} from "react-icons/fa"
+
+import HandTool from 'components/Toolbar/HandTool'
+import SelectTool from 'components/Toolbar/SelectTool'
+
 import { useStateValue } from 'hooks/useStateValue'
 import types from 'reducers/types'
 
@@ -13,31 +13,6 @@ const Container = styled.div`
   height: 40px;
   position: fixed;
 `
-
-const Button = styled.button`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  color: ${props => !props.active ? '#929292' : '#ccc9cd'};
-  height: 40px;
-  width: 40px;
-`
-
-const SelectTool = (props) => {
-  return (
-    <Button {...props}>
-      <SelectIcon />
-    </Button>
-  )
-}
-
-const HandTool = (props) => {
-  return (
-    <Button {...props}>
-      <HandIcon />
-    </Button>
-  )
-}
 
 const Toolbar = () => {
   const { state, dispatch } = useStateValue()
