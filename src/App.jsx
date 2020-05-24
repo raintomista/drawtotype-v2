@@ -9,6 +9,12 @@ const App = () => {
     canvas: {
       zoomLevel: 1
     },
+    inspector: {
+      posX: null,
+      posY: null,
+      height: null,
+      width: null
+    },
     sidebar: {
       mode: 'view-only',
       screens: [],
@@ -16,7 +22,7 @@ const App = () => {
       selectedComponent: null
     },
     toolbar: {
-      currentTool: 'select'
+      currentTool: 'hand'
     }
   }
 

@@ -3,6 +3,7 @@ import { css } from '@emotion/core'
 import { useStateValue } from 'hooks/useStateValue'
 import { isSelectedComponent as isSelected } from 'utils/isSelected'
 import { zoomScaling } from 'utils/zoomScaling'
+import types from 'reducers/types'
 
 const HeaderWithMenu = props => {
   const { state } = useStateValue()
@@ -57,12 +58,24 @@ const Image = ({ screenIndex, componentIndex }) => {
     }
   `
 
-  const handleClick = () => {
+  const handleClick = (event) => {
     if (currentTool !== 'hand') {
       dispatch({
-        type: 'SIDEBAR_SELECT_COMPONENT',
+        type: types.SIDEBAR_SELECT_COMPONENT,
         screenIndex: screenIndex,
         componentIndex: componentIndex
+      })
+
+      dispatch({
+        type: types.INSPECTOR_SET_POSITION,
+        posX: event.target.offsetLeft,
+        posY: event.target.offsetTop
+      })
+
+      dispatch({
+        type: types.INSPECTOR_SET_DIMENSION,
+        width: event.target.clientWidth,
+        height: event.target.clientHeight
       })
     }
   }

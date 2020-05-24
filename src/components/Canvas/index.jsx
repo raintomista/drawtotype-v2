@@ -47,6 +47,7 @@ const Canvas = () => {
   const handleMouseMove = e => {
     e.preventDefault()
     const { offsetTop, offsetLeft } = canvasRef.current
+    
     if (currentTool === 'hand') {
       if (!isMouseDown) return
       const x = e.pageX - offsetLeft
