@@ -6,6 +6,7 @@ import Dimensions from 'components/Inspector/Dimensions'
 
 const Container = styled.div`
   background-color: #211f27;
+  grid-area: inspector;
   max-height: 100vh;
   min-height: 100vh;
   overflow-y: scroll;

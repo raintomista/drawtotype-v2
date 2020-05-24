@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 const Container = styled.div`
+  grid-area: canvas;
   max-height: 100vh;
   max-width: 100%;
   overflow: scroll;

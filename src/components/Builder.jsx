@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
 
 import Sidebar from 'components/Sidebar'
+import Toolbar from 'components/Toolbar'
 import Canvas from 'components/Canvas'
 import Inspector from 'components/Inspector'
 
@@ -10,13 +11,18 @@ import { useStateValue } from 'hooks/useStateValue'
 import { getScreens } from 'utils/getScreens'
 
 const Container = styled.aside`
-  display: grid;
-  grid-template-columns: 250px calc(100% - 500px) 250px;
   background-color: #151515;
-  cursor: ${props => props.currentTool === 'hand'
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 250px 1fr 250px;
+  grid-template-rows: 40px 1fr;
+  grid-template-areas: 
+    "sidebar toolbar inspector"
+    "sidebar canvas inspector";
+  /* cursor: ${props => props.currentTool === 'hand'
     ? 'grab'
     : 'default'
-  };
+  }; */
 `
 
 const Builder = () => {
@@ -94,6 +100,7 @@ const Builder = () => {
   return (
     <Container currentTool={currentTool}>
       <Sidebar/>
+      <Toolbar/>
       <Canvas/>
       <Inspector/>
     </Container>

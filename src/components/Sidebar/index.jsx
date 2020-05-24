@@ -5,8 +5,9 @@ import TitleBar from 'components/Sidebar/TitleBar'
 import { HeaderInput } from 'components/Sidebar/Header'
 import { useStateValue } from 'hooks/useStateValue'
 
-const SidebarWrapper = styled.div`
+const Container = styled.div`
   background-color: #211f27;
+  grid-area: sidebar;
   max-height: 100vh;
   min-height: 100vh;
   overflow-y: scroll;
@@ -26,7 +27,7 @@ const Sidebar = () => {
   } = state.sidebar
 
   return (
-    <SidebarWrapper>
+    <Container>
       <TitleBar text="Screens" />
 
       {screens.map((screen, screenIndex) => (
@@ -45,7 +46,7 @@ const Sidebar = () => {
       {mode === 'add-screen' && (
         <HeaderInput autoFocus={true} dispatch={dispatch} />
       )}
-    </SidebarWrapper>
+    </Container>
   )
 }
 

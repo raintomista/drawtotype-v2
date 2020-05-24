@@ -67,10 +67,6 @@ const Canvas = () => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      <Toolbar
-        currentTool={state.toolbar.currentTool}
-        dispatch={dispatch}
-      />
       <Boards>
         {state.sidebar.screens.map((screen, screenIndex) => (
           <Board

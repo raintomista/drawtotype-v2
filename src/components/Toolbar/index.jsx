@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 import HandTool from 'components/Toolbar/HandTool'
 import SelectTool from 'components/Toolbar/SelectTool'
+import ZoomLevel from 'components/Toolbar/ZoomLevel'
 
 import { useStateValue } from 'hooks/useStateValue'
 import types from 'reducers/types'
@@ -10,8 +11,8 @@ import types from 'reducers/types'
 const Container = styled.div`
   background-color: #181518;
   display: flex;
+  grid-area: toolbar;
   height: 40px;
-  position: fixed;
 `
 
 const Toolbar = () => {
@@ -39,6 +40,7 @@ const Toolbar = () => {
         active={isActive('hand')}
         onClick={handleSetTool('hand')}
       />
+      <ZoomLevel/>
     </Container>
   )
 }
