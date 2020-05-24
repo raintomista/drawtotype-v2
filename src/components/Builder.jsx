@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from '@emotion/styled'
 
 import Sidebar from 'components/Sidebar'
@@ -28,6 +28,7 @@ const Container = styled.aside`
 const Builder = () => {
   const { state, dispatch } = useStateValue()
   const { currentTool } = state.toolbar
+  const canvasRef = useRef()
 
   /* Retrieves screens in the project */
   const retrieveScreens = () => {
@@ -42,6 +43,7 @@ const Builder = () => {
   const zoomIn = event => {
     const { nodeName } = event.srcElement
     const { ctrlKey, key } = event
+
     if (nodeName !== 'INPUT' && ctrlKey && key === '=') {
       event.preventDefault()
       dispatch({ type: 'CANVAS_ZOOM_IN' })
@@ -101,7 +103,7 @@ const Builder = () => {
     <Container currentTool={currentTool}>
       <Sidebar/>
       <Toolbar/>
-      <Canvas/>
+      <Canvas ref={canvasRef}/>
       <Inspector/>
     </Container>
   )

@@ -7,15 +7,13 @@ const Boards = (props) => {
   const { zoomLevel } = state.canvas
 
   const style = css`
-    align-items: center;
-    background-color: #151515;
-    box-sizing: content-box;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    box-sizing: content-box;
     justify-content: center;
     min-width: ${zoomScaling(1060, zoomLevel)};
     max-width: ${zoomScaling(1060, zoomLevel)};
-    padding: 25%;
     width: max-content;
   `
 

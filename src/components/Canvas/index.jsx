@@ -1,42 +1,37 @@
-import React, { useEffect, useRef } from 'react'
+import React, { forwardRef, useEffect } from 'react'
 import { useStateValue } from 'hooks/useStateValue'
+import DocumentArea from 'components/Canvas/DocumentArea'
 import Container from 'components/Canvas/Container'
 import Boards from 'components/Canvas/Boards'
 import Board from 'components/Canvas/Board'
-import Toolbar from 'components/Toolbar'
 
-const Canvas = () => {
-  const { state, dispatch } = useStateValue()
+const Canvas =  forwardRef((props, ref) => {
+  const { state  } = useStateValue()
   const { currentTool } = state.toolbar
-  const canvasRef = useRef()
 
   let isMouseDown = false
   let startX, startY, scrollLeft, scrollTop
 
-  useEffect(() => {
-    const { clientHeight } = canvasRef.current
-    canvasRef.current.scrollTop = clientHeight / 2 - 200
-  }, [])
-
+  
   const handleMouseDown = e => {
     e.preventDefault()
     if (currentTool === 'hand') {
-      const { offsetTop, offsetLeft } = canvasRef.current
+      const { offsetTop, offsetLeft } = ref.current
       isMouseDown = true
       startX = e.pageX - offsetLeft
       startY = e.pageY - offsetTop
-      scrollLeft = canvasRef.current.scrollLeft
-      scrollTop = canvasRef.current.scrollTop
+      scrollLeft = ref.current.scrollLeft
+      scrollTop = ref.current.scrollTop
     }
   }
-
+  
   const handleMouseUp = e => {
     e.preventDefault()
     if (currentTool === 'hand') {
       isMouseDown = false
     }
   }
-
+  
   const handleMouseLeave = e => {
     e.preventDefault()
     if (currentTool === 'hand') {
@@ -46,7 +41,7 @@ const Canvas = () => {
 
   const handleMouseMove = e => {
     e.preventDefault()
-    const { offsetTop, offsetLeft } = canvasRef.current
+    const { offsetTop, offsetLeft } = ref.current
     
     if (currentTool === 'hand') {
       if (!isMouseDown) return
@@ -54,30 +49,42 @@ const Canvas = () => {
       const y = e.pageY - offsetTop
       const walkX = (x - startX) * 1.5
       const walkY = (y - startY) * 1.5
-      canvasRef.current.scrollLeft = scrollLeft - walkX
-      canvasRef.current.scrollTop = scrollTop - walkY
+      ref.current.scrollLeft = scrollLeft - walkX
+      ref.current.scrollTop = scrollTop - walkY
     }
   }
 
+  const maintainScrollToCenter = () => {
+    const { clientHeight, clientWidth, scrollHeight, scrollWidth } = ref.current
+    ref.current.scrollTop = (scrollHeight - clientHeight) / 2
+    ref.current.scrollLeft = (scrollWidth - clientWidth) / 2
+  }
+  
+  useEffect(() => {
+    maintainScrollToCenter()
+  }, [])
+
   return (
     <Container
-      ref={canvasRef}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
+    ref={ref}
+    onMouseDown={handleMouseDown}
+    onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      <Boards>
-        {state.sidebar.screens.map((screen, screenIndex) => (
-          <Board
-            key={screenIndex}
-            screenIndex={screenIndex}
-            components={screen.components}
-          />
-        ))}
-      </Boards>
+      <DocumentArea>
+        <Boards>
+          {state.sidebar.screens.map((screen, screenIndex) => (
+            <Board
+              key={screenIndex}
+              screenIndex={screenIndex}
+              components={screen.components}
+            />
+          ))}
+        </Boards>
+      </DocumentArea>
     </Container>
   )
-}
+})
 
 export default Canvas
