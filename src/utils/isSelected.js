@@ -1,9 +1,3 @@
-export const isSelectedComponent = (
-  selectedScreen,
-  selectedComponent,
-  screenIndex,
-  componentIndex
-) => {
-  return selectedScreen === screenIndex &&
-    selectedComponent === componentIndex
+export const isSelected = (a, b, c, d ) => {
+  return a == c && b === d
 }
