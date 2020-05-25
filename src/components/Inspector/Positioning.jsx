@@ -9,7 +9,7 @@ const Container = styled.div`
   display: grid;
   grid-column-gap: 12px;
   grid-template-columns: repeat(2, calc(50% - 6px));
-  margin-bottom: 12px;
+  padding: 16px 16px 6px 16px;
 `
 
 const Positioning = () => {

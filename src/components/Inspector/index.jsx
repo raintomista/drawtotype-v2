@@ -10,7 +10,6 @@ const Container = styled.div`
   max-height: 100vh;
   min-height: 100vh;
   overflow-y: scroll;
-  padding: 16px;
   width: 250px;
   &::-webkit-scrollbar {
     display: none;
