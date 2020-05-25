@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
+import { css } from '@emotion/core'
 import { toBase64 } from 'utils/base64'
 import { useSidebarState } from 'hooks/useStateValue'
 import Header from 'components/Inspector/Header'
@@ -16,7 +17,20 @@ const ImagePanel = () => {
     screenIndex
   } = useSidebarState()
 
-  let fileData, fileName
+  const inspectorLabel = css`
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `
+
+  const inspectorFileInput = css`
+    visibility: hidden;
+    width: 100%;
+  `
+
+  let { fileData, fileName } = component.config.content 
 
   const handleFileInput = async event => {
     if (event.target.files.length === 1) {
@@ -24,6 +38,7 @@ const ImagePanel = () => {
       fileName = fileData.name
 
       component.config.content.fileData =  await toBase64(fileData)
+      component.config.content.fileName = fileName
       components.splice(componentIndex, 1, component)
       screen.components = components
       screens.splice(screenIndex, 1, screen)
@@ -34,12 +49,13 @@ const ImagePanel = () => {
   
   return (
     <React.Fragment>
-      <label>
+      <label css={inspectorLabel}>
         {fileData ? fileName : 'No file selected'}
         <input
+          css={inspectorFileInput}
           type="file"
           onChange={handleFileInput}
-          style={{visibility: 'hidden'}}
+          style={{visibility: 'hidden', width: '100%'}}
         />
       </label>
     </React.Fragment>
