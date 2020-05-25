@@ -23,6 +23,12 @@
           "utils": "./src/utils"
         }
       }
+    ],
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
     ]
   ]
 }
