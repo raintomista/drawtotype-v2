@@ -28,3 +28,18 @@ export const useSidebarState = () => {
   })
 }
 
+export const useToolbarState = () => {
+  const { state, dispatch } = useStateValue()
+  return ({
+    ...state.toolbar,
+    dispatch
+  })
+}
+
+export const useCanvasState = () => {
+  const { state, dispatch } = useStateValue()
+  return ({
+    ...state.canvas,
+    dispatch
+  })
+}
