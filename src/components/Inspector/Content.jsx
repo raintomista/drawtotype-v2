@@ -1,32 +1,53 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import ImageContent from 'components/Inspector/ImageContent'
-import { useStateValue } from 'hooks/useStateValue'
+import Header from 'components/Inspector/Header'
+import Input from 'components/Inspector/Input'
+import { useSidebarState } from 'hooks/useStateValue'
 
-const ContentWrapper = styled.div`
+const ImagePanel = () => {
+  const {
+    component,
+    components,
+    componentIndex,
+    dispatch,
+    screen,
+    screens,
+    screenIndex
+  } = useSidebarState()
+
+  const handleInput = (event) => {
+    component.imageSrc = event.target.value.trim()
+    components.splice(componentIndex, 1, component)
+    screen.components = components
+    screens.splice(screenIndex, 1, screen)
+    dispatch({ type: types.SIDEBAR_SET_SCREENS, screens })
+  }
+  
+  return (
+    <React.Fragment>
+      <Input
+        placeholder="Selected Image"
+        value={component.imageSrc}
+        onChange={handleInput}
+      />
+    </React.Fragment>
+  )
+}
+
+const Container = styled.div`
   padding: 16px;
 `
 
 const Content = () => {
-  const { state } = useStateValue()
-  const { screens } = state.sidebar
-  const { selectedScreen, selectedComponent } = state.sidebar
-  let component = null
-
-  if (selectedScreen !== null && selectedScreen !== null) {
-    component = screens[selectedScreen].components[selectedComponent]
-  }
+  const { component } = useSidebarState()
 
   return (
-    <ContentWrapper>
-      {component && (
-        <ImageContent
-          component={component}
-          componentIndex={selectedComponent}
-          screenIndex={selectedScreen}
-        />
-      )}
-    </ContentWrapper>
+    <Container>
+      <Header>
+        {component.type}
+      </Header>
+      <ImagePanel/>
+    </Container>
   )
 }
 

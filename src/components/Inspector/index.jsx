@@ -1,9 +1,9 @@
 import React from 'React'
 import styled from '@emotion/styled'
-
 import Positioning from 'components/Inspector/Positioning'
 import Dimensions from 'components/Inspector/Dimensions'
 import Content from 'components/Inspector/Content'
+import { useSidebarState } from 'hooks/useStateValue'
 
 const Container = styled.div`
   background-color: #211f27;
@@ -18,11 +18,16 @@ const Container = styled.div`
 `
 
 const Inspector = () => {
+  const { component } = useSidebarState()
   return (
     <Container>
-      <Positioning/>
-      <Dimensions/>
-      <Content/>
+      {component && (
+        <React.Fragment>
+          <Positioning/>
+          <Dimensions/>
+          <Content/>
+        </React.Fragment>
+      )}
     </Container>
   )
 }
