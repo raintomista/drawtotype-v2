@@ -30,14 +30,6 @@ const Builder = () => {
   const { currentTool } = state.toolbar
   const canvasRef = useRef()
 
-  /* Retrieves screens in the project */
-  const retrieveScreens = () => {
-    dispatch({
-      type: types.SIDEBAR_SET_SCREENS,
-      screens: getScreens()
-    })
-  }
-
   /* Calls the dispatcher to increase zoom level when the ctrl + plus is pressed
     and the key press is not trigger by an input element */
   const zoomIn = event => {
@@ -86,7 +78,6 @@ const Builder = () => {
     when the component is mounted. It also removes the attached event listeners
     when the component unmounts */
   useEffect(() => {
-    retrieveScreens()
     document.addEventListener('keydown', zoomIn, false)
     document.addEventListener('keydown', zoomOut, false)
     // document.addEventListener('keydown', keyboardShortcuts, false)
