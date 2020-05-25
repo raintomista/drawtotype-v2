@@ -29,7 +29,7 @@ const HeaderWithMenu = props => {
   )
 }
 
-const Image = ({ screenIndex, componentIndex }) => {
+const Image = ({ screenIndex, componentIndex, imageSrc }) => {
   const { state, dispatch } = useStateValue()
   const selectedA = state.sidebar.selectedScreen
   const selectedB = state.sidebar.selectedComponent
@@ -47,12 +47,12 @@ const Image = ({ screenIndex, componentIndex }) => {
       : '0 0 0 0 #288dfd'
 
   const style = css`
-    background: #cecece;
     border: ${getBorder()};
     box-shadow: ${getBoxShadow()};
     display: block;
-    padding-top: calc(100% * (3 / 4));
+    height: 250px;
     width: 100%;
+    object-fit: cover;
     :not(:last-of-type) {
       margin-bottom: ${zoomScaling(12, zoomLevel)};
     }
@@ -84,6 +84,7 @@ const Image = ({ screenIndex, componentIndex }) => {
     <img
       css={style}
       onClick={handleClick}
+      src={imageSrc}
     />
   )
 }
@@ -146,14 +147,15 @@ const Container = props => {
 
 const Board = ({ components, componentIndex, screenIndex }) => {
 
-  const getComponent = (componentType, componentIndex) => {
-    switch(componentType) {
+  const getComponent = (component, componentIndex) => {
+    switch(component.type) {
       case 'Image':
         return (
           <Image
             key={componentIndex}
             componentIndex={componentIndex}
             screenIndex={screenIndex}
+            imageSrc={component.imageSrc}
           />
         )
       default:
@@ -164,7 +166,7 @@ const Board = ({ components, componentIndex, screenIndex }) => {
   return (
     <Container>
       {components.map((component, componentIndex) => 
-        getComponent(component.type, componentIndex)
+        getComponent(component, componentIndex)
       )}
     </Container>
 )

@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 import Positioning from 'components/Inspector/Positioning'
 import Dimensions from 'components/Inspector/Dimensions'
+import Content from 'components/Inspector/Content'
 
 const Container = styled.div`
   background-color: #211f27;
@@ -21,6 +22,7 @@ const Inspector = () => {
     <Container>
       <Positioning/>
       <Dimensions/>
+      <Content/>
     </Container>
   )
 }
