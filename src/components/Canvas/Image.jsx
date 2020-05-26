@@ -15,31 +15,35 @@ const Image = (props) => {
 
   const { screenIndex: currentScreen } = props
   const { componentIndex: currentComponent } = props
-  const { content, dimension } = props.config
+  const { content, dimension, positioning } = props.config
 
   const boxShadow = isSelected(selectedScreen, selectedComponent, currentScreen, currentComponent)
     ? ' 0 0 8px -1px #288dfd'
     : '0 0 0 0 #288dfd'
 
   const height = zoomScaling(dimension.height, zoomLevel)
+  const left = `${positioning.posX}px`
+  const marginBottom = zoomScaling(12, zoomLevel)
 
   const outline = isSelected(selectedScreen, selectedComponent, currentScreen, currentComponent)
     ? '1.5px solid #288dfd80'
     : '1.5px solid transparent'
 
-  const width = !dimension.width.indexOf('%')
-    ? zoomScaling(dimension.width, zoomLevel)
-    : dimension.width
+  const top = `${positioning.posY}px`
+  const width = zoomScaling(dimension.width, zoomLevel)
 
-  const boardImage = css`
+  const Image__Image = css`
     box-shadow: ${boxShadow};
     display: block;
     height: ${height};
+    left: ${left};
     object-fit: cover;
     outline: ${outline};
+    position: absolute;
+    top: ${top};
     width: ${width};
     :not(:last-of-type) {
-      margin-bottom: ${zoomScaling(12, zoomLevel)};
+      margin-bottom: ${marginBottom};
     }
   `
   
@@ -67,7 +71,7 @@ const Image = (props) => {
 
   return (
     <img
-      css={boardImage}
+      css={Image__Image}
       onClick={handleClick}
       src={content.fileData}
     />

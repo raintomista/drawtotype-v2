@@ -1,7 +1,6 @@
 import React from 'React'
 import styled from '@emotion/styled'
-import Positioning from 'components/Inspector/Positioning'
-import Dimensions from 'components/Inspector/Dimensions'
+import Layout from 'components/Inspector/Layout'
 import Content from 'components/Inspector/Content'
 import { useSidebarState } from 'hooks/useStateValue'
 
@@ -23,8 +22,7 @@ const Inspector = () => {
     <Container>
       {component && (
         <React.Fragment>
-          <Positioning/>
-          <Dimensions/>
+          <Layout/>
           <Content/>
         </React.Fragment>
       )}

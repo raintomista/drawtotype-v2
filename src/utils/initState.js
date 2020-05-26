@@ -24,7 +24,7 @@ const initialState = {
               },
               dimension: {
                 height: '300px',
-                width: '100%'
+                width: '100px'
               },
               positioning: {
                 posX: '12px',
