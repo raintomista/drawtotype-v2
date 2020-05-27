@@ -2,6 +2,7 @@ import * as types from 'reducers/sidebar/types'
 import {
   addComponent,
   addScreen,
+  deleteComponent,
   deleteScreen,
   duplicateComponent,
   duplicateScreen,
@@ -20,6 +21,8 @@ export const sidebarReducer = (state, action) => {
       return addComponent(state, action);
     case types.SIDEBAR_ADD_SCREEN:
       return addScreen(state, action);
+    case types.SIDEBAR_DELETE_COMPONENT:
+      return deleteComponent(state, action);
     case types.SIDEBAR_DELETE_SCREEN:
       return deleteScreen(state, action);
     case types.SIDEBAR_DUPLICATE_COMPONENT:
@@ -41,8 +44,8 @@ export const sidebarReducer = (state, action) => {
     case types.SIDEBAR_TOGGLE_COLLAPSED:
       return toggleCollapsed(state, action);
     default:
-      return {
+      return ({
         ...state
-      };
+      });
   }
 };

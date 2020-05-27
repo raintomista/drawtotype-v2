@@ -37,6 +37,22 @@ export const addComponent = (state, action) => {
   }
 }
 
+export const deleteComponent = (state, action) => {
+  const { screens } = state;
+  const { componentIndex, screenIndex } = action;
+
+  // Get the reference to the selected screen
+  const screen = screens[screenIndex]
+
+  // Update the remove the selected component from its components
+  screen.components.splice(componentIndex, 1);
+
+  return {
+    ...state,
+    screens
+  }
+}
+
 export const deleteScreen = (state, action) => {
   const { screens } = state;
   const { screenIndex } = action;
