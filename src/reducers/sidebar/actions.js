@@ -35,6 +35,16 @@ export const addComponent = (state, action) => {
   }
 }
 
+export const selectScreen = (state, action) => {
+  const { screenIndex } = action
+  
+  return {
+    ...state,
+    selectedScreen: screenIndex,
+    selectedComponent: null
+  }
+}
+
 export const selectComponent = (state, action) => {
   const { screenIndex, componentIndex } = action
 

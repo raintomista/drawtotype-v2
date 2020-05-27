@@ -2,6 +2,7 @@ import * as types from 'reducers/sidebar/types'
 import {
   addComponent,
   addScreen,
+  selectScreen,
   selectComponent,
   setMode,
   setScreens,
@@ -14,6 +15,8 @@ export const sidebarReducer = (state, action) => {
       return addComponent(state, action);
     case types.SIDEBAR_ADD_SCREEN:
       return addScreen(state, action);
+    case types.SIDEBAR_SELECT_SCREEN:
+        return selectScreen(state, action)
     case types.SIDEBAR_SELECT_COMPONENT:
       return selectComponent(state, action);
     case types.SIDEBAR_SET_MODE:

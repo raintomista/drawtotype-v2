@@ -4,35 +4,6 @@ import styled from '@emotion/styled'
 import { useStateValue } from 'hooks/useStateValue'
 import types from 'reducers/types'
 
-const HeaderWrapper = styled.div`
-  background-color: #292b2f;
-  color: #ffffff;
-  display: grid;
-  font-size: 16px;
-  font-weight: 500;
-  grid-column-gap: 12px;
-  grid-template-columns: 40px 1fr 40px;
-  height: 40px;
-`
-
-const HeaderBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 500;
-  &.collapsed {
-    transform: rotate(180deg);
-  }
-`
-
-const HeaderText = styled.h2`
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 12px 0px;
-`
-
 export const HeaderInput = ({ dispatch, ...props }) => {
   const handleBlur = event => {
     // Trim whitespaces
@@ -78,7 +49,53 @@ export const HeaderInput = ({ dispatch, ...props }) => {
   )
 }
 
-const Header = ({ collapsed, dispatch, screenIndex, text }) => {
+const Wrapper = styled.div`
+  background-color: ${props =>
+    props.isSelected ? '#288dfd' : '#292b2f'
+  };
+  color: #ffffff;
+  cursor: pointer;
+  display: grid;
+  font-size: 16px;
+  font-weight: 500;
+  height: 40px;
+  grid-column-gap: 12px;
+  grid-template-columns: 40px 1fr 40px;
+  user-select: none;
+`
+
+const Button = styled.button`
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  &.collapsed {
+    transform: rotate(180deg);
+  }
+`
+
+const Text = styled.h2`
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 0px;
+`
+
+const Header = ({ collapsed, screenIndex, text }) => {
+  const { state, dispatch } = useStateValue()
+  const { selectedScreen, selectedComponent } = state.sidebar
+
+  const isSelected = selectedScreen === screenIndex
+    && selectedComponent === null
+
+  const handleClick = () => {
+    dispatch({
+      type: types.SIDEBAR_SELECT_SCREEN,
+      screenIndex: screenIndex
+    })
+  }
+
   const handleToggle = () => {
     dispatch({
       type: types.SIDEBAR_TOGGLE_COLLAPSED,
@@ -98,16 +115,19 @@ const Header = ({ collapsed, dispatch, screenIndex, text }) => {
   }
 
   return (
-    <HeaderWrapper>
-      <HeaderBtn
+    <Wrapper
+      isSelected={isSelected}
+      onClick={handleClick}
+    >
+      <Button
         onClick={handleToggle}
         className={collapsed ? 'collapsed' : ''}
       >
         &#x25BC;
-      </HeaderBtn>
-      <HeaderText>{text}</HeaderText>
-      <HeaderBtn onClick={handleAdd}>+</HeaderBtn>
-    </HeaderWrapper>
+      </Button>
+      <Text>{text}</Text>
+      <Button onClick={handleAdd}>+</Button>
+    </Wrapper>
   )
 }
 
