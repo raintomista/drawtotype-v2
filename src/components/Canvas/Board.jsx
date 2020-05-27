@@ -16,7 +16,6 @@ const Container = props => {
 
   const boardContainer = css`
     background-color: #ffffff;
-    border: 1px solid #000000;
     position: relative;
     max-height: ${maxHeight};
     max-width: ${maxWidth};
