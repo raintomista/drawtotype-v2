@@ -12,7 +12,6 @@ const ItemWrapper = styled.div`
   /* &:hover {
     background-color: rgba(0, 0, 0, 0.2);
   } */
-  &:active,
   &.active {
     background-color: #288dfd;
   }

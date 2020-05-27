@@ -101,7 +101,7 @@ export const selectComponent = (state, action) => {
   return {
     ...state,
     selectedScreen: screenIndex,
-    selectedComponentZ: componentIndex
+    selectedComponent: componentIndex
   }
 }
 
