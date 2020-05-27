@@ -125,6 +125,23 @@ export const renameScreen = (state, action) => {
 
   const screen = screens[screenIndex]
   screen.name = screenName
+  
+  return {
+    ...state,
+    screens
+  }
+}
+
+export const renameComponent = (state, action) => {
+  const { screens } = state
+  const { screenIndex } = action
+  const { componentName, componentIndex } = action
+
+  /* Get the reference to the current screen and current component.
+    Then, update the component name */
+  const screen = screens[screenIndex]
+  const component = screen.components[componentIndex]
+  component.name = componentName
 
   return {
     ...state,
