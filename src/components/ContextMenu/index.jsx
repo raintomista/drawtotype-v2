@@ -50,7 +50,15 @@ const ContextMenu = () => {
     }
   }
 
-  const handleRename = event => {
+  const handleRename = () => {
+    const target = state.target
+    switch(target.dataset.itemType) {
+      case 'screen':
+        return dispatch({
+          type: types.SIDEBAR_SET_MODE_RENAME_SCREEN,
+          screenIndex: parseInt(target.dataset.screenIndex)
+        })
+    }
   }
 
   const handleDelete = event => {

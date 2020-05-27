@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import Group from 'components/Sidebar/Group'
 import TitleBar from 'components/Sidebar/TitleBar'
-import { HeaderInput } from 'components/Sidebar/Header'
+import HeaderInput from 'components/Sidebar/HeaderInput'
 import { useStateValue } from 'hooks/useStateValue'
 
 const Container = styled.div`
@@ -19,12 +19,8 @@ const Container = styled.div`
 
 const Sidebar = () => {
   const { state, dispatch } = useStateValue()
-  const {
-    mode,
-    selectedScreen,
-    selectedComponent,
-    screens
-  } = state.sidebar
+  const { mode, screens } = state.sidebar
+  const { selectedScreen, selectedComponent } = state.sidebar
 
   return (
     <Container>
@@ -44,8 +40,9 @@ const Sidebar = () => {
       ))}
 
       {mode === 'add-screen' && (
-        <HeaderInput autoFocus={true} dispatch={dispatch} />
+        <HeaderInput inline={false} />
       )}
+
     </Container>
   )
 }

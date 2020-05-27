@@ -60,6 +60,19 @@ export const duplicateScreen = (state, action) => {
   }
 }
 
+export const renameScreen = (state, action) => {
+  const { screens } = state
+  const { screenIndex, screenName } = action
+
+  const screen = screens[screenIndex]
+  screen.name = screenName
+
+  return {
+    ...state,
+    screens
+  }
+}
+
 export const selectScreen = (state, action) => {
   const { screenIndex } = action
   
@@ -76,7 +89,7 @@ export const selectComponent = (state, action) => {
   return {
     ...state,
     selectedScreen: screenIndex,
-    selectedComponent: componentIndex
+    selectedComponentZ: componentIndex
   }
 }
 
@@ -85,6 +98,17 @@ export const setMode = (state, action) => {
   return {
     ...state,
     mode: mode
+  }
+}
+
+export const setModeRenameScreen = (state, action) => {
+  const { screenIndex } = action
+
+  return {
+    ...state,
+    mode: 'rename-screen',
+    selectedScreen: screenIndex,
+    selectedComponent: null
   }
 }
 

@@ -3,9 +3,11 @@ import {
   addComponent,
   addScreen,
   duplicateScreen,
+  renameScreen,
   selectScreen,
   selectComponent,
   setMode,
+  setModeRenameScreen,
   setScreens,
   toggleCollapsed
 } from 'reducers/sidebar/actions'
@@ -17,13 +19,17 @@ export const sidebarReducer = (state, action) => {
     case types.SIDEBAR_ADD_SCREEN:
       return addScreen(state, action);
     case types.SIDEBAR_DUPLICATE_SCREEN:
-      return duplicateScreen(state, action)
+      return duplicateScreen(state, action);
+    case types.SIDEBAR_RENAME_SCREEN:
+      return renameScreen(state, action);
     case types.SIDEBAR_SELECT_SCREEN:
-        return selectScreen(state, action)
+        return selectScreen(state, action);
     case types.SIDEBAR_SELECT_COMPONENT:
       return selectComponent(state, action);
     case types.SIDEBAR_SET_MODE:
       return setMode(state, action);
+    case types.SIDEBAR_SET_MODE_RENAME_SCREEN:
+      return setModeRenameScreen(state, action);
     case types.SIDEBAR_SET_SCREENS:
       return setScreens(state, action);
     case types.SIDEBAR_TOGGLE_COLLAPSED:

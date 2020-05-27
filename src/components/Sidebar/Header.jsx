@@ -1,54 +1,9 @@
 import React from 'react'
-import { css } from '@emotion/core'
 import styled from '@emotion/styled'
 import { FaCaretDown, FaPlusCircle } from "react-icons/fa"
+import HeaderInput from 'components/Sidebar/HeaderInput'
 import { useStateValue } from 'hooks/useStateValue'
 import types from 'reducers/types'
-
-export const HeaderInput = ({ dispatch, ...props }) => {
-  const handleBlur = event => {
-    // Trim whitespaces
-    const screenName = event.target.value.trim()
-    // Validate if the screen name is not an empty string
-    if (screenName.length > 0) {
-      dispatch({
-        type: types.SIDEBAR_ADD_SCREEN,
-        screenName: screenName
-      })
-    }
-    // Reset to view-only mode
-    dispatch({
-      type: types.SIDEBAR_SET_MODE,
-      mode: 'view-only'
-    })
-  }
-
-  const handleKeyPress = event => {
-    // If Enter key is pressed, re-use onBlur handler
-    if (event.key === 'Enter') {
-      handleBlur(event)
-    }
-  }
-
-  return (
-    <input
-      {...props}
-      autoFocus={true}
-      onBlur={handleBlur}
-      onKeyPress={handleKeyPress}
-      css={css`
-        background-color: #292b2f;
-        border: none;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 500;
-        height: 40px;
-        padding: 12px 52px;
-        width: 100%;
-      `}
-    />
-  )
-}
 
 const Wrapper = styled.div`
   background-color: ${props =>
@@ -71,6 +26,7 @@ const Button = styled.button`
   color: #ffffff;
   font-size: 14px;
   font-weight: 500;
+  outline: none;
   &.collapsed {
     transform: rotate(180deg);
   }
@@ -86,9 +42,10 @@ const Text = styled.h2`
 const Header = ({ collapsed, screenIndex, text }) => {
   const { state, dispatch } = useStateValue()
   const { selectedScreen, selectedComponent } = state.sidebar
+  const { mode } = state.sidebar
 
   const isSelected = selectedScreen === screenIndex
-    && selectedComponent === null
+    && selectedComponent === null 
 
   const handleClick = () => {
     dispatch({
@@ -116,25 +73,31 @@ const Header = ({ collapsed, screenIndex, text }) => {
   }
 
   return (
-    <Wrapper
-      isSelected={isSelected}
-      onClick={handleClick}
-    >
-      <Button
-        onClick={handleToggle}
-        className={collapsed ? 'collapsed' : ''}
-      >
-        <FaCaretDown/>
+    <Wrapper isSelected={isSelected} onClick={handleClick}>
+      <Button onClick={handleToggle} className={collapsed ? 'collapsed' : ''}>
+        <FaCaretDown />
       </Button>
-      <Text
-        data-allow="context-menu"
-        data-item-type="screen"
-        data-screen-index={screenIndex}
-      >
-        {text}
-      </Text>
+
+      {/* Display text when sidebar mode is set to 'view-only' */}
+      {(!isSelected || isSelected && mode !== 'rename-screen') && (
+        <Text
+          data-allow="context-menu"
+          data-item-type="screen"
+          data-screen-index={screenIndex}
+        >
+          {text}
+        </Text>
+      )}
+
+      {/* Display input when sidebar mode is set to 'rename-screen' */}
+      {isSelected && mode === 'rename-screen' && (
+        <HeaderInput
+          screenIndex={screenIndex}
+        />
+      )}
+
       <Button onClick={handleAdd}>
-        <FaPlusCircle/>
+        <FaPlusCircle />
       </Button>
     </Wrapper>
   )
