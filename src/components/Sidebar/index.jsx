@@ -17,32 +17,35 @@ const Container = styled.div`
   }
 `
 
+const Accordions = ({ screens }) => {
+  return screens.map((screen, screenIndex) => (
+    <Group
+      key={screenIndex}
+      collapsed={screen.collapsed}
+      components={screen.components}
+      screenIndex={screenIndex}
+      text={screen.name}
+    />
+  ))
+}
+
+const AccordionInput = ({ mode }) => (
+  <React.Fragment>
+    {mode === 'add-screen' && (
+      <HeaderInput inline={false}/>
+    )}
+  </React.Fragment>
+);
+
 const Sidebar = () => {
-  const { state, dispatch } = useStateValue()
+  const { state } = useStateValue()
   const { mode, screens } = state.sidebar
-  const { selectedScreen, selectedComponent } = state.sidebar
 
   return (
     <Container>
       <TitleBar text="Screens" />
-
-      {screens.map((screen, screenIndex) => (
-        <Group
-          key={screenIndex}
-          collapsed={screen.collapsed}
-          components={screen.components}
-          dispatch={dispatch}
-          screenIndex={screenIndex}
-          selectedScreen={selectedScreen}
-          selectedComponent={selectedComponent}
-          text={screen.name}
-        />
-      ))}
-
-      {mode === 'add-screen' && (
-        <HeaderInput inline={false} />
-      )}
-
+      <Accordions screens={screens} />
+      <AccordionInput mode={mode}/>
     </Container>
   )
 }
