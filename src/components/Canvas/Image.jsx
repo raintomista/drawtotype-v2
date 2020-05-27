@@ -22,14 +22,14 @@ const Image = (props) => {
     : '0 0 0 0 #288dfd'
 
   const height = zoomScaling(dimension.height, zoomLevel)
-  const left = `${positioning.posX}px`
+  const left = `${parseInt(positioning.posX)}px`
   const marginBottom = zoomScaling(12, zoomLevel)
 
   const outline = isSelected(selectedScreen, selectedComponent, currentScreen, currentComponent)
     ? '1.5px solid #288dfd80'
     : '1.5px solid transparent'
 
-  const top = `${positioning.posY}px`
+  const top = `${parseInt(positioning.posY)}px`
   const width = zoomScaling(dimension.width, zoomLevel)
 
   const Image__Image = css`

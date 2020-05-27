@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import types from 'reducers/types'
 
-const ItemWrapper = styled.div`
+const Wrapper = styled.div`
   color: #ffffff;
   cursor: pointer;
   height: 40px;
@@ -38,12 +38,16 @@ const Item = ({
   }
 
   return (
-    <ItemWrapper
-      className={isSelected ? 'active' : ''}
+    <Wrapper
       onClick={handleClick}
+      data-allow="context-menu"
+      data-item-type="component"
+      data-screen-index={screenIndex}
+      data-component-index={componentIndex}
+      className={isSelected ? 'active' : ''}
     >
       {text}
-    </ItemWrapper>
+    </Wrapper>
   )
 }
 

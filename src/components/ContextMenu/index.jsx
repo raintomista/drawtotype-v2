@@ -47,6 +47,12 @@ const ContextMenu = () => {
           type: types.SIDEBAR_DUPLICATE_SCREEN,
           screenIndex: parseInt(target.dataset.screenIndex)
         })
+      case 'component':
+        return dispatch({
+          type: types.SIDEBAR_DUPLICATE_COMPONENT,
+          screenIndex: parseInt(target.dataset.screenIndex),
+          componentIndex: parseInt(target.dataset.componentIndex)
+        })
     }
   }
 

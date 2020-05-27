@@ -31,7 +31,24 @@ const initialState = {
                 posY: '12px'
               }
             }
-          }
+          },
+          {
+            type: 'Image',
+            config: {
+              content: {
+                fileData: 'https://images.unsplash.com/photo-1590374585152-ca0e8194c0d6?auto=format&fit=crop&w=500&q=80',
+                fileName: 'Office.jpg'
+              },
+              dimension: {
+                height: '300px',
+                width: '100px'
+              },
+              positioning: {
+                posX: '50px',
+                posY: '50px'
+              }
+            }
+          },
         ]
       }
     ],

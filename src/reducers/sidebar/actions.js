@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash';
+
 export const addScreen = (state, action) => {
   const { screens } = state
   const { screenName } = action
@@ -44,6 +46,24 @@ export const deleteScreen = (state, action) => {
   return {
     ...state,
     screens
+  }
+}
+
+export const duplicateComponent = (state, action) => {
+  const { screens } = state
+  const { componentIndex, screenIndex } = action
+
+  const screen = screens[screenIndex]
+  const component = screen.components[componentIndex]
+
+  const duplicateComponent = cloneDeep(component)
+  screen.components.splice(componentIndex + 1, 0, duplicateComponent)
+
+  return {
+    ...state,
+    screens,
+    selectedScreen: screenIndex,
+    selectedComponent: componentIndex + 1
   }
 }
 

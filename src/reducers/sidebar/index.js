@@ -3,6 +3,7 @@ import {
   addComponent,
   addScreen,
   deleteScreen,
+  duplicateComponent,
   duplicateScreen,
   renameScreen,
   selectScreen,
@@ -21,6 +22,8 @@ export const sidebarReducer = (state, action) => {
       return addScreen(state, action);
     case types.SIDEBAR_DELETE_SCREEN:
       return deleteScreen(state, action);
+    case types.SIDEBAR_DUPLICATE_COMPONENT:
+      return duplicateComponent(state,action)
     case types.SIDEBAR_DUPLICATE_SCREEN:
       return duplicateScreen(state, action);
     case types.SIDEBAR_RENAME_SCREEN:
