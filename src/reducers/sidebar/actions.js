@@ -1,11 +1,6 @@
 export const addScreen = (state, action) => {
-  const {
-    screens
-  } = state
-
-  const {
-    screenName
-  } = action
+  const { screens } = state
+  const { screenName } = action
 
   screens.push({
     name: screenName,
@@ -20,14 +15,8 @@ export const addScreen = (state, action) => {
 }
 
 export const addComponent = (state, action) => {
-  const {
-    screens
-  } = state
-
-  const {
-    screenIndex,
-    componentType
-  } = action
+  const { screens } = state
+  const { screenIndex, componentType } = action
 
   screens[screenIndex].collapsed = false
   screens[screenIndex].components.push({
@@ -47,10 +36,7 @@ export const addComponent = (state, action) => {
 }
 
 export const selectComponent = (state, action) => {
-  const {
-    screenIndex,
-    componentIndex
-  } = action
+  const { screenIndex, componentIndex } = action
 
   return {
     ...state,
@@ -60,10 +46,7 @@ export const selectComponent = (state, action) => {
 }
 
 export const setMode = (state, action) => {
-  const {
-    mode
-  } = action
-
+  const { mode } = action
   return {
     ...state,
     mode: mode
@@ -71,9 +54,7 @@ export const setMode = (state, action) => {
 }
 
 export const setScreens = (state, action) => {
-  const {
-    screens
-  } = action
+  const { screens } = action
 
   return {
     ...state,
@@ -82,13 +63,8 @@ export const setScreens = (state, action) => {
 }
 
 export const toggleCollapsed = (state, action) => {
-  const {
-    screens
-  } = state
-
-  const {
-    screenIndex
-  } = action
+  const { screens } = state
+  const { screenIndex } = action
 
   screens[screenIndex].collapsed = !screens[screenIndex].collapsed
 
