@@ -38,9 +38,20 @@ export const addComponent = (state, action) => {
 export const duplicateScreen = (state, action) => {
   const { screens } = state
   const { screenIndex } = action
-  const screen = screens[screenIndex]
-  screens.splice(screenIndex, 0, screen)
 
+  // Reference the current screen and update collapsed to true
+  const screen = screens[screenIndex]
+  screen.collapsed = true
+
+  // Clone the current screen and set its collapse to false
+  const duplicateScreen =  Object.assign({}, screen)
+  duplicateScreen.collapsed = false
+
+  // Insert the duplicate screen after the current screen
+  screens.splice(screenIndex + 1, 0, duplicateScreen)
+
+  // Always select the duplicate screen
+  // when the action finishes
   return {
     ...state,
     screens,
