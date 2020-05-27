@@ -35,6 +35,18 @@ export const addComponent = (state, action) => {
   }
 }
 
+export const deleteScreen = (state, action) => {
+  const { screens } = state;
+  const { screenIndex } = action;
+
+  screens.splice(screenIndex, 1);
+
+  return {
+    ...state,
+    screens
+  }
+}
+
 export const duplicateScreen = (state, action) => {
   const { screens } = state
   const { screenIndex } = action

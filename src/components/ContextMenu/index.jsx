@@ -61,7 +61,19 @@ const ContextMenu = () => {
     }
   }
 
-  const handleDelete = event => {
+  const handleDelete = () => {
+    const target = state.target;
+    const prompt = confirm(`Delete the screen "${target.innerText}"?`);
+
+    if (prompt) {
+      switch(target.dataset.itemType) {
+        case 'screen':
+          return dispatch({
+            type: types.SIDEBAR_DELETE_SCREEN,
+            screenIndex: parseInt(target.dataset.screenIndex)
+          })
+      }
+    }
   }
 
   useEffect(() => {
