@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+import { ImageFactory } from 'utils/componentFactory'
 
 export const addScreen = (state, action) => {
   const { screens } = state
@@ -17,17 +18,27 @@ export const addScreen = (state, action) => {
 }
 
 export const addComponent = (state, action) => {
-  const { screens } = state
-  const { screenIndex, componentType } = action
+  const { screens } = state;
+  const { screenIndex, componentType } = action;
 
-  screens[screenIndex].collapsed = false
-  screens[screenIndex].components.push({
-    type: componentType
-  });
+  let component, screen;
 
+  /* Generate a new component based on its type */
+  switch(componentType) {
+    case 'Image':
+      component = new ImageFactory()
+      break;
+  }
+
+  /* Get the reference to the current screen and 
+    uncollapse it before adding the new component */
+  screen = screens[screenIndex]
+  screen.collapsed = false
+  screen.components.push(component)
+
+  /* Always select the newly created component */
   const selectedScreen = screenIndex
-  const selectedComponent = screens[screenIndex].components.length - 1
-
+  const selectedComponent = screen.components.length - 1
 
   return {
     ...state,

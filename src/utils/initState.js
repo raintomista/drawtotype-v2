@@ -15,7 +15,8 @@ const initialState = {
         name: 'Screen 1',
         collapsed: false,
         components: [
-          {
+          { 
+            name: 'Image',
             type: 'Image',
             config: {
               content: {
@@ -33,6 +34,7 @@ const initialState = {
             }
           },
           {
+            name: 'Image',
             type: 'Image',
             config: {
               content: {
