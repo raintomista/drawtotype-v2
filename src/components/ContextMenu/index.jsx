@@ -1,23 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/core'
+import { useStateValue } from 'hooks/useStateValue'
+import types from 'reducers/types'
 
 const ContextMenu = () => {
   const visibleRef = useRef(false)
-
+  const { dispatch } = useStateValue()
   const [state, setState] = useState({
     visible: false,
+    target: null,
     posX: 0,
     posY: 0
   })
 
   const handleContextMenu = event => {
     event.preventDefault()
-    visibleRef.current = true
-    setState({
-      visible: true,
-      posX: event.clientX,
-      posY: event.clientY
-    })
+    if (event.target.dataset.allow === 'context-menu') {
+      visibleRef.current = true
+      setState({
+        visible: true,
+        target: event.target,
+        posX: event.clientX,
+        posY: event.clientY
+      })
+    }
   }
 
   const handleBlur = event => {
@@ -26,6 +32,7 @@ const ContextMenu = () => {
       visibleRef.current = false
       setState({
         visible: false,
+        target: null,
         posX: event.clientX,
         posY: event.clientY
       })
@@ -33,6 +40,14 @@ const ContextMenu = () => {
   }
 
   const handleDuplicate = event => {
+    const target = state.target
+    switch(target.dataset.itemType) {
+      case 'screen':
+        return dispatch({
+          type: types.SIDEBAR_DUPLICATE_SCREEN,
+          screenIndex: parseInt(target.dataset.screenIndex)
+        })
+    }
   }
 
   const handleRename = event => {

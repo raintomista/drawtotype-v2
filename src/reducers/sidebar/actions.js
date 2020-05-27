@@ -35,6 +35,20 @@ export const addComponent = (state, action) => {
   }
 }
 
+export const duplicateScreen = (state, action) => {
+  const { screens } = state
+  const { screenIndex } = action
+  const screen = screens[screenIndex]
+  screens.splice(screenIndex, 0, screen)
+
+  return {
+    ...state,
+    screens,
+    selectedScreen: screenIndex + 1,
+    selectedComponent: null
+  }
+}
+
 export const selectScreen = (state, action) => {
   const { screenIndex } = action
   

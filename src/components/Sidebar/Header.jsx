@@ -126,7 +126,13 @@ const Header = ({ collapsed, screenIndex, text }) => {
       >
         <FaCaretDown/>
       </Button>
-      <Text>{text}</Text>
+      <Text
+        data-allow="context-menu"
+        data-item-type="screen"
+        data-screen-index={screenIndex}
+      >
+        {text}
+      </Text>
       <Button onClick={handleAdd}>
         <FaPlusCircle/>
       </Button>
