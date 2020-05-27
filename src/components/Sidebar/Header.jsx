@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
+import { FaCaretDown } from "react-icons/fa"
 import { useStateValue } from 'hooks/useStateValue'
 import types from 'reducers/types'
 
@@ -123,7 +124,7 @@ const Header = ({ collapsed, screenIndex, text }) => {
         onClick={handleToggle}
         className={collapsed ? 'collapsed' : ''}
       >
-        &#x25BC;
+        <FaCaretDown/>
       </Button>
       <Text>{text}</Text>
       <Button onClick={handleAdd}>+</Button>
