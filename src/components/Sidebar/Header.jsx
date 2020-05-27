@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
-import { FaCaretDown } from "react-icons/fa"
+import { FaCaretDown, FaPlusCircle } from "react-icons/fa"
 import { useStateValue } from 'hooks/useStateValue'
 import types from 'reducers/types'
 
@@ -127,7 +127,9 @@ const Header = ({ collapsed, screenIndex, text }) => {
         <FaCaretDown/>
       </Button>
       <Text>{text}</Text>
-      <Button onClick={handleAdd}>+</Button>
+      <Button onClick={handleAdd}>
+        <FaPlusCircle/>
+      </Button>
     </Wrapper>
   )
 }
