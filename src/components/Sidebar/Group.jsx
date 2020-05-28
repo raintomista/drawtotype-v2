@@ -19,12 +19,9 @@ const Group = ({ collapsed, components, screenIndex, text }) => {
         components.map((component, componentIndex) => (
           <Item
             key={componentIndex}
-            componentIndex={componentIndex}
-            dispatch={dispatch}
+            itemText={component.name}
             screenIndex={screenIndex}
-            selectedScreen={selectedScreen}
-            selectedComponent={selectedComponent}
-            text={component.type}
+            componentIndex={componentIndex}
           />
         ))}
     </React.Fragment>

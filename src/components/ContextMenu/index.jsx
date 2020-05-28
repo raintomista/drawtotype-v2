@@ -63,7 +63,13 @@ const ContextMenu = () => {
         return dispatch({
           type: types.SIDEBAR_SET_MODE_RENAME_SCREEN,
           screenIndex: parseInt(target.dataset.screenIndex)
-        })
+        });
+      case 'component':
+        return dispatch({
+          type: types.SIDEBAR_SET_MODE_RENAME_COMPONENT,
+          screenIndex: parseInt(target.dataset.screenIndex),
+          componentIndex: parseInt(target.dataset.componentIndex)
+        });
     }
   }
 
