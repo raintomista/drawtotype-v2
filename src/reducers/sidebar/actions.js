@@ -48,6 +48,18 @@ export const addComponent = (state, action) => {
   }
 }
 
+export const deleteScreen = (state, action) => {
+  const { screens } = state;
+  const { screenIndex } = action;
+
+  screens.splice(screenIndex, 1);
+
+  return {
+    ...state,
+    screens
+  }
+}
+
 export const deleteComponent = (state, action) => {
   const { screens } = state;
   const { componentIndex, screenIndex } = action;
@@ -61,36 +73,6 @@ export const deleteComponent = (state, action) => {
   return {
     ...state,
     screens
-  }
-}
-
-export const deleteScreen = (state, action) => {
-  const { screens } = state;
-  const { screenIndex } = action;
-
-  screens.splice(screenIndex, 1);
-
-  return {
-    ...state,
-    screens
-  }
-}
-
-export const duplicateComponent = (state, action) => {
-  const { screens } = state
-  const { componentIndex, screenIndex } = action
-
-  const screen = screens[screenIndex]
-  const component = screen.components[componentIndex]
-
-  const duplicateComponent = cloneDeep(component)
-  screen.components.splice(componentIndex + 1, 0, duplicateComponent)
-
-  return {
-    ...state,
-    screens,
-    selectedScreen: screenIndex,
-    selectedComponent: componentIndex + 1
   }
 }
 
@@ -116,6 +98,24 @@ export const duplicateScreen = (state, action) => {
     screens,
     selectedScreen: screenIndex + 1,
     selectedComponent: null
+  }
+}
+
+export const duplicateComponent = (state, action) => {
+  const { screens } = state
+  const { componentIndex, screenIndex } = action
+
+  const screen = screens[screenIndex]
+  const component = screen.components[componentIndex]
+
+  const duplicateComponent = cloneDeep(component)
+  screen.components.splice(componentIndex + 1, 0, duplicateComponent)
+
+  return {
+    ...state,
+    screens,
+    selectedScreen: screenIndex,
+    selectedComponent: componentIndex + 1
   }
 }
 
@@ -185,6 +185,17 @@ export const setModeRenameScreen = (state, action) => {
     mode: 'rename-screen',
     selectedScreen: screenIndex,
     selectedComponent: null
+  }
+}
+
+export const setModeRenameComponent = (state, action) => {
+  const { screenIndex, componentIndex } = action
+
+  return {
+    ...state,
+    mode: 'rename-component',
+    selectedScreen: screenIndex,
+    selectedComponent: componentIndex
   }
 }
 
