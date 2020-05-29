@@ -6,7 +6,7 @@ import { zoomScaling } from 'utils/zoomScaling'
 import { isSelected } from 'utils/isSelected'
 import types from 'reducers/types'
 
-const Image = (props) => {  
+const Image = (props) => {
   const { dispatch } = useStateValue()
   const { screenIndex: selectedScreen } = useSidebarState()
   const { componentIndex: selectedComponent } = useSidebarState()
@@ -22,34 +22,30 @@ const Image = (props) => {
     : '0 0 0 0 #288dfd'
 
   const height = zoomScaling(dimension.height, zoomLevel)
-  const left = `${parseInt(positioning.posX)}px`
   const marginBottom = zoomScaling(12, zoomLevel)
 
   const outline = isSelected(selectedScreen, selectedComponent, currentScreen, currentComponent)
     ? '1.5px solid #288dfd80'
     : '1.5px solid transparent'
 
-  const top = `${parseInt(positioning.posY)}px`
   const width = zoomScaling(dimension.width, zoomLevel)
 
   const Image__Image = css`
     box-shadow: ${boxShadow};
     display: block;
     height: ${height};
-    left: ${left};
     object-fit: cover;
     outline: ${outline};
     position: absolute;
-    top: ${top};
     width: ${width};
     :not(:last-of-type) {
       margin-bottom: ${marginBottom};
     }
   `
-  
+
   const handleClick = (event) => {
     event.stopPropagation()
-    
+
     if (currentTool !== 'hand') {
       dispatch({
         type: types.SIDEBAR_SELECT_COMPONENT,
@@ -74,6 +70,10 @@ const Image = (props) => {
   return (
     <img
       css={Image__Image}
+      style={{ top: positioning.posY, left: positioning.posX }}
+      data-allow="drag-to-move"
+      data-screen-index={currentScreen}
+      data-component-index={currentComponent}
       onClick={handleClick}
       src={content.fileData}
     />

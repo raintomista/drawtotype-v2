@@ -170,6 +170,27 @@ export const selectComponent = (state, action) => {
   }
 }
 
+export const setComponentPosition = (state, action) => {
+  const { screens } = state
+  const { screenIndex, componentIndex } = action
+  const { posX, posY } = action
+
+  /* Create a deep clone of the screens. Then, get the references
+    to the current screen and current component */
+  let updatedScreens = cloneDeep(screens)
+  let updatedScreen = updatedScreens[screenIndex]
+  let updatedComponent = updatedScreen.components[componentIndex] 
+
+  /* Use the reference to update the position of the current component */
+  updatedComponent.config.positioning.posX = posX
+  updatedComponent.config.positioning.posY = posY
+
+  return {
+    ...state,
+    screens: updatedScreens
+  }
+}
+
 export const setMode = (state, action) => {
   const { mode } = action
   return {
