@@ -20,13 +20,14 @@ export const addScreen = (state, action) => {
 export const addComponent = (state, action) => {
   const { screens } = state;
   const { screenIndex, componentType } = action;
+  const { posX, posY } = action;
 
   let component, screen;
 
   /* Generate a new component based on its type */
   switch(componentType) {
     case 'Image':
-      component = new ImageFactory()
+      component = new ImageFactory(posX, posY)
       break;
   }
 

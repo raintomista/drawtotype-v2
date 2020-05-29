@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/core'
 import Image from 'components/Canvas/Image'
 import { useStateValue } from 'hooks/useStateValue'
@@ -7,7 +7,10 @@ import { zoomScaling } from 'utils/zoomScaling'
 import types from 'reducers/types'
 
 const Container = props => {
+  const { dispatch } = useStateValue()
   const { zoomLevel } = useCanvasState()
+  const elementRef = useRef()
+
   const marginTop = zoomScaling(20, zoomLevel)
   const marginRight = zoomScaling(20, zoomLevel)
   const maxHeight = zoomScaling(400, zoomLevel)
@@ -38,11 +41,34 @@ const Container = props => {
       outline: 2px solid #288dfd;
     }
   `
+
+  const handleDragOver = event => {
+    event.preventDefault() // Allow dragging over the Board
+  }
+
+  const handleDrop = event => {
+    event.preventDefault() // Allow dropping over the Board
+    
+    const board = elementRef.current.getBoundingClientRect()
+    const data = JSON.parse(event.dataTransfer.getData('new-component'))
+    
+    dispatch({
+      type: types.SIDEBAR_ADD_COMPONENT,
+      screenIndex: props.screenIndex,
+      componentType: data.componentType,
+      posX: event.clientX - board.x - data.offsetX,
+      posY: event.clientY - board.y - data.offsetY
+    })
+  }
+
   return (
     <div
       css={boardContainer}
       className={props.className}
       onClick={props.onClick}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      ref={elementRef}
     >
       {props.children}
     </div>
@@ -92,8 +118,7 @@ const Board = ({ components, screenIndex }) => {
   
 
   return (
-    <Container onClick={handleClick} className={selected ? 'selected' : ''}>
-      {selected.toS}
+    <Container onClick={handleClick} className={selected ? 'selected' : ''} screenIndex={screenIndex}>
       {components.map((component, componentIndex) =>
         getComponent(component, componentIndex)
       )}

@@ -44,6 +44,7 @@ const Sidebar = () => {
 
   return (
     <Container>
+      <TitleBar text="Library" />
       <Library/>
       <TitleBar text="Screens" />
       <Accordions screens={screens} />
