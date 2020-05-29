@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import Group from 'components/Sidebar/Group'
+import Library from 'components/Sidebar/Library'
 import TitleBar from 'components/Sidebar/TitleBar'
 import HeaderInput from 'components/Sidebar/HeaderInput'
 import { useStateValue } from 'hooks/useStateValue'
@@ -43,6 +44,7 @@ const Sidebar = () => {
 
   return (
     <Container>
+      <Library/>
       <TitleBar text="Screens" />
       <Accordions screens={screens} />
       <AccordionInput mode={mode}/>
