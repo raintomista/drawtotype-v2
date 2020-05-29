@@ -48,6 +48,8 @@ const Image = (props) => {
   `
   
   const handleClick = (event) => {
+    event.stopPropagation()
+    
     if (currentTool !== 'hand') {
       dispatch({
         type: types.SIDEBAR_SELECT_COMPONENT,
