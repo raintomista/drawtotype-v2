@@ -182,8 +182,8 @@ export const setComponentPosition = (state, action) => {
   let updatedComponent = updatedScreen.components[componentIndex] 
 
   /* Use the reference to update the position of the current component */
-  updatedComponent.config.positioning.posX = posX
-  updatedComponent.config.positioning.posY = posY
+  updatedComponent.config.positioning.posX = `${posX}px`
+  updatedComponent.config.positioning.posY = `${posY}px`
 
   return {
     ...state,
