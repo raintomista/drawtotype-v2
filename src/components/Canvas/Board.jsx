@@ -108,12 +108,12 @@ const Board = ({ components, screenIndex }) => {
   }
 
   const handleClick = (event) => {
-    if (currentTool !== 'hand') {
-      dispatch({
-        type: types.SIDEBAR_SELECT_SCREEN,
-        screenIndex: screenIndex
-      })
-    }
+    // if (currentTool !== 'hand') {
+    //   dispatch({
+    //     type: types.SIDEBAR_SELECT_SCREEN,
+    //     screenIndex: screenIndex
+    //   })
+    // }
   }
   
 

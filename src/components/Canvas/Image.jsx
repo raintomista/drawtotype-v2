@@ -6,6 +6,8 @@ import { zoomScaling } from 'utils/zoomScaling'
 import { isSelected } from 'utils/isSelected'
 import types from 'reducers/types'
 
+import BoundingBox from 'components/Canvas/BoundingBox'
+
 const Image = (props) => {
   const { dispatch } = useStateValue()
   const { screenIndex: selectedScreen } = useSidebarState()
@@ -30,22 +32,24 @@ const Image = (props) => {
 
   const width = zoomScaling(dimension.width, zoomLevel)
 
-  const Image__Image = css`
-    box-shadow: ${boxShadow};
-    display: block;
-    height: ${height};
-    object-fit: cover;
-    outline: ${outline};
+  const Image__Container = css`
     position: absolute;
-    width: ${width};
+  `
+
+  const Image__Image = css`
+    /* box-shadow: ${boxShadow}; */
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    /* outline: ${outline}; */
+    position: absolute;
+    width: 100%;
     :not(:last-of-type) {
       margin-bottom: ${marginBottom};
     }
   `
 
   const handleClick = (event) => {
-    event.stopPropagation()
-
     if (currentTool !== 'hand') {
       dispatch({
         type: types.SIDEBAR_SELECT_COMPONENT,
@@ -67,16 +71,30 @@ const Image = (props) => {
     }
   }
 
+  const layoutStyle = {
+    width: `${dimension.width}`,
+    height: `${dimension.height}`,
+    top: `${positioning.posY}`,
+    left: `${positioning.posX}`
+  }
+
   return (
-    <img
-      css={Image__Image}
-      style={{ top: positioning.posY, left: positioning.posX }}
+    <div
+      css={Image__Container}
+      style={layoutStyle}
       data-allow="drag-to-move"
       data-screen-index={currentScreen}
       data-component-index={currentComponent}
-      onClick={handleClick}
-      src={content.fileData}
-    />
+      // onClick={handleClick}
+    >
+      {isSelected(selectedScreen, selectedComponent, currentScreen, currentComponent) && (
+        <BoundingBox/>
+      )}
+      <img
+        css={Image__Image}
+        src={content.fileData}
+      />
+    </div>
   )
 }
 

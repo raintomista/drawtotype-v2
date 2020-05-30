@@ -9,6 +9,7 @@ import Inspector from 'components/Inspector'
 import types from 'reducers/types'
 import { useStateValue } from 'hooks/useStateValue'
 import { getScreens } from 'utils/getScreens'
+import BoundingBox from './Canvas/BoundingBox'
 
 const Container = styled.aside`
   background-color: #151515;
@@ -82,7 +83,7 @@ const Builder = () => {
 
   const handleMouseDown = event => {
     clickRef.current = true // Flag for click
-    targetRef.current = event.target // Reference to the target element
+    targetRef.current = event.target.parentElement // Reference to the target element
 
     /* Handler for component re-positioning */
     if (targetRef.current.dataset.allow === 'drag-to-move') {
@@ -92,7 +93,7 @@ const Builder = () => {
         and the origin of the target element */
       offsetRef.current.x = event.clientX - target.x
       offsetRef.current.y = event.clientY - target.y
-
+      
       /* Select target element when a click is detected */
       dispatch({
         type: types.SIDEBAR_SELECT_COMPONENT,
@@ -104,7 +105,7 @@ const Builder = () => {
 
   const handleMouseMove = event => {
     /* Handle the movement of the mouse when left click is still being pressed down */
-    if (clickRef.current === true) {
+    if (clickRef.current === true && targetRef.current.dataset.allow === 'drag-to-move') {
       const board = targetRef.current.parentElement.getBoundingClientRect()
 
       /* Compute the new position of the target element by adding the offset between the initial
