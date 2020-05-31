@@ -177,6 +177,7 @@ const Canvas = forwardRef((props, ref) => {
   return (
     <Container
       ref={ref}
+      className={currentTool === 'hand' ? 'hand-tool-enabled' : ''}
       onMouseDownCapture={handleMouseDown}
       onMouseMoveCapture={handleMouseMove}
       onMouseUp={handleMouseUp}

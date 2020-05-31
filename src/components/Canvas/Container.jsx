@@ -6,6 +6,9 @@ const Container = styled.div`
   max-width: 100%;
   overflow: scroll;
   position: relative;
+  &.hand-tool-enabled {
+    cursor: grab;
+  }
   &::-webkit-scrollbar {
     width: 10px;
     height: 10px;
