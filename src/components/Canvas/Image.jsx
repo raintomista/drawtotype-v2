@@ -10,7 +10,7 @@ const Image = forwardRef((props, ref) => {
   const [layout, setLayout] = useState(null)
   const elementRef = useRef()
 
-  const { zoomLevel } = state.canvas
+  const { currentTool } = state.toolbar
   const { selectedScreen, selectedComponent } = state.sidebar
   const { screenIndex, componentIndex } = props
   const { content, dimension, positioning } = props.config
@@ -22,7 +22,7 @@ const Image = forwardRef((props, ref) => {
   }
 
   const handleClick = event => {
-    if (!selected) {
+    if (currentTool === 'select' && !selected) {
       dispatch({
         type: types.SIDEBAR_SELECT_COMPONENT,
         screenIndex: screenIndex,
