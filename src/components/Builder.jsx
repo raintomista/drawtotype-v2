@@ -131,9 +131,9 @@ const Builder = () => {
   useEffect(() => {
     document.addEventListener('keydown', zoomIn, false)
     document.addEventListener('keydown', zoomOut, false)
-    document.addEventListener('mousedown', handleMouseDown, true)
-    document.addEventListener('mousemove', handleMouseMove, true)
-    document.addEventListener('mouseup', handleMouseUp, true)
+    // document.addEventListener('mousedown', handleMouseDown, true)
+    // document.addEventListener('mousemove', handleMouseMove, true)
+    // document.addEventListener('mouseup', handleMouseUp, true)
     // document.addEventListener('keydown', keyboardShortcuts, false)
 
     // Removes the event listeners before the component unmounts

@@ -93,7 +93,8 @@ const ResizeHandle = ({ type: resizerType, ...props }) => {
   return (
     <div
       css={resizer}
-      data-allow="resize"
+      data-resizer={true}
+      data-resizer-type={resizerType}
       {...props}
     >
     </div>
@@ -105,29 +106,6 @@ const BoundingBox = forwardRef((props, { imageRef, boardRef }) => {
   const clickRef = useRef(false);
 
   const { selectedScreen, selectedComponent } = state.sidebar
-
-  const handleMouseDown = () => {
-    clickRef.current = true;
-  }
-
-  const handleMouseMove = event => {
-    if (clickRef.current) {
-      const board = boardRef.current.getBoundingClientRect()
-      const image = imageRef.current.getBoundingClientRect()
-
-      dispatch({
-        type: types.SIDEBAR_SET_COMPONENT_DIMENSION,
-        height: image.height,
-        width: event.clientX - image.left,
-        screenIndex: selectedScreen,
-        componentIndex: selectedComponent
-      })
-    }
-  }
-
-  const handleMouseUp = () => {
-    clickRef.current = false
-  }
 
   const boundingBox = css`
     position: absolute;
@@ -144,54 +122,14 @@ const BoundingBox = forwardRef((props, { imageRef, boardRef }) => {
       data-screen-index={selectedScreen}
       data-component-index={selectedComponent}
     >
-      <ResizeHandle
-        type="resizer-n"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
-      <ResizeHandle
-        type="resizer-e"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
-      <ResizeHandle
-        type="resizer-w"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
-      <ResizeHandle
-        type="resizer-s"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
-      <ResizeHandle
-        type="resizer-nw"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
-      <ResizeHandle
-        type="resizer-ne"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
-      <ResizeHandle
-        type="resizer-sw"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
-      <ResizeHandle
-        type="resizer-se"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
+      <ResizeHandle type="resizer-n"/>
+      <ResizeHandle type="resizer-e"/>
+      <ResizeHandle type="resizer-w"/>
+      <ResizeHandle type="resizer-s"/>
+      <ResizeHandle type="resizer-nw"/>
+      <ResizeHandle type="resizer-ne"/>
+      <ResizeHandle type="resizer-sw"/>
+      <ResizeHandle type="resizer-se"/>
     </div>
   )
 })

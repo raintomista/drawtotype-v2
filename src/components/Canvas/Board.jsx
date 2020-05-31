@@ -65,7 +65,7 @@ const Board = ({ components, screenIndex }) => {
     min-height: calc(400px * ${zoomLevel});
     min-width: calc(250px * ${zoomLevel});
     padding: calc(12px * ${zoomLevel});
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     &::-webkit-scrollbar {
       display: none;
     }

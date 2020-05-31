@@ -99,8 +99,85 @@ const Canvas = forwardRef((props, ref) => {
         screenIndex: parseInt(targetRef.current.dataset.screenIndex),
         componentIndex: parseInt(targetRef.current.dataset.componentIndex)
       })
+    } else if (currentTool === 'select' && clickRef.current && targetRef.current.dataset.resizer) {
+      const boundingBox = targetRef.current.parentElement
+      const component = boundingBox.parentElement
+      const board = component.parentElement
+
+      const { screenIndex, componentIndex } = boundingBox.dataset
+      const componentRect = component.getBoundingClientRect()
+      const boardRect = board.getBoundingClientRect()
+
+      let newHeight, newWidth, newPosX, newPosY
+
+      switch (targetRef.current.dataset.resizerType) {
+        case 'resizer-nw':
+          newHeight = (componentRect.y + componentRect.height) - event.clientY
+          newWidth = (componentRect.x + componentRect.width) - event.clientX
+          newPosX = event.clientX - boardRect.left
+          newPosY = event.clientY - boardRect.top
+          break
+        case 'resizer-n':
+          newHeight = (componentRect.y + componentRect.height) - event.clientY
+          newWidth = componentRect.width
+          newPosX = componentRect.left - boardRect.left
+          newPosY = event.clientY - boardRect.top
+          break
+        case 'resizer-ne':
+          newHeight = (componentRect.y + componentRect.height) - event.clientY
+          newWidth = event.clientX - componentRect.left
+          newPosX = componentRect.left - boardRect.left
+          newPosY = event.clientY - boardRect.top
+          break
+        case 'resizer-w':
+          newHeight = componentRect.height
+          newWidth = (componentRect.x + componentRect.width) - event.clientX
+          newPosX = event.clientX - boardRect.left
+          newPosY = componentRect.top - boardRect.top
+          break
+        case 'resizer-e':
+          newHeight = componentRect.height
+          newWidth = event.clientX - componentRect.left
+          newPosX = componentRect.left - boardRect.left
+          newPosY = componentRect.top - boardRect.top
+          break
+        case 'resizer-sw':
+          newHeight = event.clientY - componentRect.top
+          newWidth = (componentRect.x + componentRect.width) - event.clientX
+          newPosX = event.clientX - boardRect.left
+          newPosY = componentRect.top - boardRect.top
+          break
+        case 'resizer-s':
+          newHeight = event.clientY - componentRect.top
+          newWidth = componentRect.width
+          newPosX = componentRect.left - boardRect.left
+          newPosY = componentRect.top - boardRect.top
+          break
+        case 'resizer-se':
+          newHeight = event.clientY - componentRect.top
+          newWidth = event.clientX - componentRect.left
+          newPosX = componentRect.left - boardRect.left
+          newPosY = componentRect.top - boardRect.top
+          break
+      }
+
+      dispatch({
+        type: types.SIDEBAR_SET_COMPONENT_DIMENSION,
+        height: newHeight,
+        width: newWidth,
+        screenIndex: parseInt(screenIndex),
+        componentIndex: parseInt(componentIndex)
+      })
+
+      dispatch({
+        type: types.SIDEBAR_SET_COMPONENT_POSITION,
+        posX: newPosX,
+        posY: newPosY,
+        screenIndex: parseInt(screenIndex),
+        componentIndex: parseInt(componentIndex)
+      })
     }
-  }
+  } 
 
   const handleMouseUpCapture = event => {
     clickRef.current = false
