@@ -1,8 +1,134 @@
-import React from 'react'
+import React, { forwardRef, useRef, useState } from 'react'
 import { css } from '@emotion/core'
-import styled from '@emotion/styled'
+import { useStateValue } from 'hooks/useStateValue'
+import types from 'reducers/types'
 
-const BoundingBox = props => {
+const ResizeHandle = ({ type: resizerType, ...props }) => {
+  const resizers = {
+    "resizer-nw": {
+      "cursor": "nw-resize",
+      "top": "-3px",
+      "left": "-3px",
+      "bottom": "auto",
+      "right": "auto"
+    },
+    "resizer-n": {
+      "cursor": "ns-resize",
+      "top": "-3px",
+      "left": "calc(50% - 3px)",
+      "bottom": "auto",
+      "right": "auto"
+    },
+    "resizer-ne": {
+      "cursor": "ne-resize",
+      "top": "-3px",
+      "left": "auto",
+      "bottom": "auto",
+      "right": "-3px"
+    },
+    "resizer-w": {
+      "cursor": "ew-resize",
+      "top": "calc(50% - 3px)",
+      "left": "-3px",
+      "bottom": "auto",
+      "right": "auto"
+    },
+    "resizer-e": {
+      "cursor": "ew-resize",
+      "top": "calc(50% - 3px)",
+      "left": "auto",
+      "bottom": "auto",
+      "right": "-3px"
+    },
+    "resizer-sw": {
+      "cursor": "sw-resize",
+      "top": "auto",
+      "left": "-3px",
+      "bottom": "-3px",
+      "right": "auto"
+    },
+    "resizer-s": {
+      "cursor": "ns-resize",
+      "top": "auto",
+      "left": "calc(50% - 3px)",
+      "bottom": "-3px",
+      "right": "auto"
+    },
+    "resizer-se": {
+      "cursor": "se-resize",
+      "top": "auto",
+      "left": "auto",
+      "bottom": "-3px",
+      "right": "-3px"
+    },
+  }
+
+  const {
+    [resizerType]: {
+      cursor,
+      top,
+      left,
+      bottom,
+      right
+    }
+  } = resizers
+
+  const resizer = css`
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #4286f4;
+    height: 6px;
+    width: 6px;
+    z-index: 1;
+    cursor: ${cursor};
+    top: ${top};
+    left: ${left};
+    bottom: ${bottom};
+    right: ${right};
+    &:hover {
+      background-color: #4286f4;
+    }
+  `
+
+  return (
+    <div
+      css={resizer}
+      data-allow="resize"
+      {...props}
+    >
+    </div>
+  );
+}
+
+const BoundingBox = forwardRef((props, { imageRef, boardRef }) => {
+  const { state, dispatch } = useStateValue()
+  const clickRef = useRef(false);
+
+  const { selectedScreen, selectedComponent } = state.sidebar
+
+  const handleMouseDown = () => {
+    clickRef.current = true;
+  }
+
+  const handleMouseMove = event => {
+    if (clickRef.current) {
+      const board = boardRef.current.getBoundingClientRect()
+      const image = imageRef.current.getBoundingClientRect()
+
+      dispatch({
+        type: types.SIDEBAR_SET_COMPONENT_DIMENSION,
+        height: image.height,
+        width: event.clientX - image.left,
+        screenIndex: selectedScreen,
+        componentIndex: selectedComponent
+      })
+    }
+  }
+
+  const handleMouseUp = () => {
+    clickRef.current = false
+  }
+
   const boundingBox = css`
     position: absolute;
     border: 1px solid #4286f4;
@@ -10,81 +136,59 @@ const BoundingBox = props => {
     width: 100%;
     z-index: 1;
   `
-
-  const resizer = css`
-    position: absolute;
-    background-color: #4286f4;
-    width: 6px;
-    height: 6px;
-    z-index: 1;
-  `
-
-  const resizerNW = css`
-    ${resizer};
-    cursor: nw-resize;
-    left: -3px;
-    top: -3px;
-  `
-  const resizerN = css`
-    ${resizer};
-    cursor: ns-resize;
-    left: calc(50% - 3px);
-    top: -3px;
-  `
-
-  const resizerNE = css`
-    ${resizer};
-    cursor: ne-resize;
-    right: -3px;
-    top: -3px;
-  `
-
-  const resizerW = css`
-    ${resizer};
-    cursor: ew-resize;
-    left: -3px;
-    top: calc(50% - 3px);
-  `
-
-  const resizerE = css`
-    ${resizer};
-    cursor: ew-resize;
-    right: -3px;
-    top: calc(50% - 3px);
-  `
-
-  const resizerSW = css`
-    ${resizer};
-    cursor: sw-resize;
-    left: -3px;
-    bottom: -3px;
-  `
-  const resizerS = css`
-    ${resizer};
-    cursor: ns-resize;
-    left: calc(50% - 3px);
-    bottom: -3px;
-  `
-
-  const resizerSE = css`
-    ${resizer};
-    cursor: se-resize;
-    right: -3px;
-    bottom: -3px;
-  `
-
+  
   return (
     <div css={boundingBox}>
-      <div css={resizerNW}></div>
-      <div css={resizerN}></div>
-      <div css={resizerNE}></div>
-      <div css={resizerW}></div>
-      <div css={resizerE}></div>
-      <div css={resizerSW}></div>
-      <div css={resizerS}></div>
-      <div css={resizerSE}></div>
+      <ResizeHandle
+        type="resizer-n"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+      <ResizeHandle
+        type="resizer-e"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+      <ResizeHandle
+        type="resizer-w"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+      <ResizeHandle
+        type="resizer-s"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+      <ResizeHandle
+        type="resizer-nw"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+      <ResizeHandle
+        type="resizer-ne"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+      <ResizeHandle
+        type="resizer-sw"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+      <ResizeHandle
+        type="resizer-se"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
     </div>
   )
-}
+})
 
 export default BoundingBox

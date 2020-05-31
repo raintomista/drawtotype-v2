@@ -10,6 +10,7 @@ import {
   renameComponent,
   selectScreen,
   selectComponent,
+  setComponentDimension,
   setComponentPosition,
   setMode,
   setModeRenameScreen,
@@ -40,6 +41,8 @@ export const sidebarReducer = (state, action) => {
       return selectScreen(state, action);
     case types.SIDEBAR_SELECT_COMPONENT:
       return selectComponent(state, action);
+    case types.SIDEBAR_SET_COMPONENT_DIMENSION:
+      return setComponentDimension(state, action);
     case types.SIDEBAR_SET_COMPONENT_POSITION:
       return setComponentPosition(state, action);
     case types.SIDEBAR_SET_MODE:

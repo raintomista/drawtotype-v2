@@ -2,128 +2,93 @@ import React, { useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/core'
 import Image from 'components/Canvas/Image'
 import { useStateValue } from 'hooks/useStateValue'
-import { useCanvasState, } from 'hooks/useStateValue'
-import { zoomScaling } from 'utils/zoomScaling'
 import types from 'reducers/types'
 
-const Container = props => {
-  const { dispatch } = useStateValue()
-  const { zoomLevel } = useCanvasState()
-  const elementRef = useRef()
+const Board = ({ components, screenIndex }) => {
+  const { state, dispatch } = useStateValue();
+  const [ selected, setSelected ] = useState(false);
+  const elementRef = useRef();
 
-  const marginTop = zoomScaling(20, zoomLevel)
-  const marginRight = zoomScaling(20, zoomLevel)
-  const maxHeight = zoomScaling(400, zoomLevel)
-  const maxWidth = zoomScaling(250, zoomLevel)
-  const minHeight = zoomScaling(400, zoomLevel)
-  const minWidth = zoomScaling(250, zoomLevel)
-  const padding = zoomScaling(12, zoomLevel)
+  const { zoomLevel } = state.canvas;
+  const { selectedScreen, selectedComponent } = state.sidebar;
 
-  const boardContainer = css`
-    background-color: #ffffff;
+  const getComponent = (component, componentIndex) => {
+    switch(component.type) {
+      case 'Image':
+        return (
+          <Image
+            key={componentIndex}
+            ref={{boardRef: elementRef}}
+            config={component.config}
+            componentIndex={componentIndex}
+            screenIndex={screenIndex}
+          />
+        );
+      default:
+        return;
+    }
+  }
+
+  const handleDragOver = event => {
+    event.preventDefault(); // Allow dragging over the Board
+  }
+
+  const handleDrop = event => {
+    event.preventDefault(); // Allow dropping over the Board
+    
+    const board = elementRef.current.getBoundingClientRect();
+    const data = JSON.parse(event.dataTransfer.getData('new-component'));
+    
+    dispatch({
+      type: types.SIDEBAR_ADD_COMPONENT,
+      screenIndex: screenIndex,
+      componentType: data.componentType,
+      posX: event.clientX - board.x - data.offsetX,
+      posY: event.clientY - board.y - data.offsetY
+    });
+  }
+
+  const isSelected = () => {
+    return selectedScreen === screenIndex
+      && selectedComponent === null
+  }
+
+  useEffect(() => {
+    setSelected(isSelected());
+  }, [selectedScreen, selectedComponent]);
+
+  const container = css`
     position: relative;
-    max-height: ${maxHeight};
-    max-width: ${maxWidth};
-    min-height: ${minHeight};
-    min-width: ${minWidth};
-    padding: ${padding};
+    background-color: #ffffff;
+    max-height: calc(400px * ${zoomLevel});
+    max-width: calc(250px * ${zoomLevel});
+    min-height: calc(400px * ${zoomLevel});
+    min-width: calc(250px * ${zoomLevel});
+    padding: calc(12px * ${zoomLevel});
     overflow-y: scroll;
     &::-webkit-scrollbar {
       display: none;
     }
     &:nth-of-type(n + 5) {
-      margin-top: ${marginTop};
+      margin-top: calc(20px * ${zoomLevel});
     }
     &:not(:nth-of-type(4n)) {
-      margin-right: ${marginRight};
-    }
-    &.selected {
-      outline: 2px solid #288dfd;
+      margin-right: calc(20px * ${zoomLevel});
     }
   `
 
-  const handleDragOver = event => {
-    event.preventDefault() // Allow dragging over the Board
-  }
-
-  const handleDrop = event => {
-    event.preventDefault() // Allow dropping over the Board
-    
-    const board = elementRef.current.getBoundingClientRect()
-    const data = JSON.parse(event.dataTransfer.getData('new-component'))
-    
-    dispatch({
-      type: types.SIDEBAR_ADD_COMPONENT,
-      screenIndex: props.screenIndex,
-      componentType: data.componentType,
-      posX: event.clientX - board.x - data.offsetX,
-      posY: event.clientY - board.y - data.offsetY
-    })
-  }
-
   return (
     <div
-      css={boardContainer}
-      className={props.className}
-      onClick={props.onClick}
+      css={container}
+      ref={elementRef}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      ref={elementRef}
     >
-      {props.children}
-    </div>
-  )
-}
-
-const Board = ({ components, screenIndex }) => {
-  const { state, dispatch } = useStateValue()
-  const [ selected, setSelected ] = useState(false)
-  
-  const { selectedScreen, selectedComponent } = state.sidebar
-  const { currentTool } = state.toolbar
-
-  useEffect(() => {
-    setSelected(isSelected())
-  }, [selectedScreen, selectedComponent])
-
-  function isSelected () {
-    return selectedScreen === screenIndex
-      && selectedComponent === null
-  }
-   
-  const getComponent = (component, componentIndex) => {
-    switch (component.type) {
-      case 'Image':
-        return (
-          <Image
-            key={componentIndex}
-            componentIndex={componentIndex}
-            screenIndex={screenIndex}
-            config={component.config}
-          />
-        )
-      default:
-        return
-    }
-  }
-
-  const handleClick = (event) => {
-    // if (currentTool !== 'hand') {
-    //   dispatch({
-    //     type: types.SIDEBAR_SELECT_SCREEN,
-    //     screenIndex: screenIndex
-    //   })
-    // }
-  }
-  
-
-  return (
-    <Container onClick={handleClick} className={selected ? 'selected' : ''} screenIndex={screenIndex}>
-      {components.map((component, componentIndex) =>
-        getComponent(component, componentIndex)
+      {components.map((component, index) =>
+        getComponent(component, index)
       )}
-    </Container>
-  )
+    </div>
+  );
 }
 
 export default Board

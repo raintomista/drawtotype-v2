@@ -1,101 +1,84 @@
-import React from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/core'
-import { useCanvasState, useSidebarState } from 'hooks/useStateValue'
-import { useToolbarState, useStateValue } from 'hooks/useStateValue'
-import { zoomScaling } from 'utils/zoomScaling'
-import { isSelected } from 'utils/isSelected'
-import types from 'reducers/types'
-
 import BoundingBox from 'components/Canvas/BoundingBox'
+import { useStateValue } from 'hooks/useStateValue'
 
-const Image = (props) => {
-  const { dispatch } = useStateValue()
-  const { screenIndex: selectedScreen } = useSidebarState()
-  const { componentIndex: selectedComponent } = useSidebarState()
-  const { currentTool } = useToolbarState()
-  const { zoomLevel } = useCanvasState()
+const Image = forwardRef((props, ref) => {
+  const { state } = useStateValue()
+  const [ selected, setSelected ] = useState(false)
+  const [ layout, setLayout ] = useState(null)
+  const elementRef = useRef()
 
-  const { screenIndex: currentScreen } = props
-  const { componentIndex: currentComponent } = props
+  const { zoomLevel } = state.canvas
+  const { selectedScreen, selectedComponent } = state.sidebar
+  const { screenIndex, componentIndex } = props
   const { content, dimension, positioning } = props.config
+  const { boardRef } = ref
 
-  const boxShadow = isSelected(selectedScreen, selectedComponent, currentScreen, currentComponent)
-    ? ' 0 0 8px -1px #288dfd'
-    : '0 0 0 0 #288dfd'
+  const isSelected = () => {
+    return selectedScreen === screenIndex
+      && selectedComponent === componentIndex
+  }
 
-  const height = zoomScaling(dimension.height, zoomLevel)
-  const marginBottom = zoomScaling(12, zoomLevel)
+  useEffect(() => {
+    setSelected(isSelected())
+    setLayout({
+      width: dimension.width,
+      height: dimension.height,
+      left: positioning.posX,
+      top: positioning.posY
+    })
+  }, [])
 
-  const outline = isSelected(selectedScreen, selectedComponent, currentScreen, currentComponent)
-    ? '1.5px solid #288dfd80'
-    : '1.5px solid transparent'
+  useEffect(() => {
+    setSelected(isSelected())
+  }, [selectedScreen, selectedComponent])
 
-  const width = zoomScaling(dimension.width, zoomLevel)
+  useEffect(() => {
+    setLayout({
+      width: dimension.width,
+      height: dimension.height,
+      left: positioning.posX,
+      top: positioning.posY
+    })
+  }, [dimension, positioning])
 
-  const Image__Container = css`
+
+  const container = css`
     position: absolute;
   `
 
-  const Image__Image = css`
-    /* box-shadow: ${boxShadow}; */
+  const image = css`
+    position: absolute;
     display: block;
     height: 100%;
-    object-fit: cover;
-    /* outline: ${outline}; */
-    position: absolute;
     width: 100%;
-    :not(:last-of-type) {
-      margin-bottom: ${marginBottom};
-    }
+    object-fit: cover;
   `
-
-  const handleClick = (event) => {
-    if (currentTool !== 'hand') {
-      dispatch({
-        type: types.SIDEBAR_SELECT_COMPONENT,
-        screenIndex: currentScreen,
-        componentIndex: currentComponent
-      })
-
-      dispatch({
-        type: types.INSPECTOR_SET_POSITION,
-        posX: event.target.offsetLeft,
-        posY: event.target.offsetTop
-      })
-
-      dispatch({
-        type: types.INSPECTOR_SET_DIMENSION,
-        width: event.target.clientWidth,
-        height: event.target.clientHeight
-      })
-    }
-  }
-
-  const layoutStyle = {
-    width: `${dimension.width}`,
-    height: `${dimension.height}`,
-    top: `${positioning.posY}`,
-    left: `${positioning.posX}`
-  }
-
+  
   return (
     <div
-      css={Image__Container}
-      style={layoutStyle}
+      style={layout}
+      css={container}
+      ref={elementRef}
       data-allow="drag-to-move"
-      data-screen-index={currentScreen}
-      data-component-index={currentComponent}
-      // onClick={handleClick}
+      data-screen-index={screenIndex}
+      data-component-index={componentIndex}
     >
-      {isSelected(selectedScreen, selectedComponent, currentScreen, currentComponent) && (
-        <BoundingBox/>
+      {selected && (
+        <BoundingBox
+          ref={{
+            boardRef: boardRef,
+            imageRef: elementRef
+          }}
+        />
       )}
       <img
-        css={Image__Image}
+        css={image}
         src={content.fileData}
       />
     </div>
   )
-}
+})
 
 export default Image
