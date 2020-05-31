@@ -18,7 +18,10 @@ const Boards = (props) => {
   `
 
   return (
-    <div css={style}>
+    <div
+      css={style}
+      data-deselect={true}
+    >
       {props.children}
     </div>
   )

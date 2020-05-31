@@ -27,20 +27,28 @@ const Canvas = forwardRef((props, ref) => {
     clickRef.current = true
     targetRef.current = event.target
 
-    if (currentTool === 'select' && targetRef.current.dataset.allow === 'reposition') {
-      const target = targetRef.current.getBoundingClientRect()
+    if (currentTool === 'select') {
+      if (targetRef.current.dataset.allow === 'reposition') {
+        const target = targetRef.current.getBoundingClientRect()
 
-      /* Compute the offset between the origin of the click
-        and the origin of the target element */
-      offsetRef.current.x = event.clientX - target.x
-      offsetRef.current.y = event.clientY - target.y
+        /* Compute the offset between the origin of the click
+          and the origin of the target element */
+        offsetRef.current.x = event.clientX - target.x
+        offsetRef.current.y = event.clientY - target.y
 
-      /* Select target element when a click is detected */
-      dispatch({
-        type: types.SIDEBAR_SELECT_COMPONENT,
-        screenIndex: parseInt(targetRef.current.dataset.screenIndex),
-        componentIndex: parseInt(targetRef.current.dataset.componentIndex)
-      })
+        /* Select target element when a click is detected */
+        dispatch({
+          type: types.SIDEBAR_SELECT_COMPONENT,
+          screenIndex: parseInt(targetRef.current.dataset.screenIndex),
+          componentIndex: parseInt(targetRef.current.dataset.componentIndex)
+        })
+      } else if (targetRef.current.dataset.deselect) {
+        dispatch({
+          type: types.SIDEBAR_SELECT_COMPONENT,
+          screenIndex: null,
+          componentIndex: null
+        })
+      }
     } else if (currentTool === 'hand') {
       const { offsetTop, offsetLeft } = ref.current
       isMouseDown = true
@@ -174,7 +182,7 @@ const Canvas = forwardRef((props, ref) => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      <DocumentArea>
+      <DocumentArea data-deselect={true}>
         <Boards>
           {state.sidebar.screens.map((screen, screenIndex) => (
             <Board
