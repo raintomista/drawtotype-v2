@@ -2,9 +2,10 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/core'
 import BoundingBox from 'components/Canvas/BoundingBox'
 import { useStateValue } from 'hooks/useStateValue'
+import types from 'reducers/types'
 
 const Image = forwardRef((props, ref) => {
-  const { state } = useStateValue()
+  const { state, dispatch } = useStateValue()
   const [ selected, setSelected ] = useState(false)
   const [ layout, setLayout ] = useState(null)
   const elementRef = useRef()
@@ -18,6 +19,16 @@ const Image = forwardRef((props, ref) => {
   const isSelected = () => {
     return selectedScreen === screenIndex
       && selectedComponent === componentIndex
+  }
+
+  const handleClick = event => {
+    if (!selected) {
+      dispatch({
+        type: types.SIDEBAR_SELECT_COMPONENT,
+        screenIndex: screenIndex,
+        componentIndex: componentIndex
+      })
+    }
   }
 
   useEffect(() => {
@@ -54,6 +65,7 @@ const Image = forwardRef((props, ref) => {
     height: 100%;
     width: 100%;
     object-fit: cover;
+    user-select: none;
   `
   
   return (
@@ -64,6 +76,7 @@ const Image = forwardRef((props, ref) => {
       data-allow="drag-to-move"
       data-screen-index={screenIndex}
       data-component-index={componentIndex}
+      onClickCapture={handleClick}
     >
       {selected && (
         <BoundingBox
