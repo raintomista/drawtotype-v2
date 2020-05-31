@@ -17,55 +17,13 @@ const Canvas = forwardRef((props, ref) => {
   let isMouseDown = false
   let startX, startY, scrollLeft, scrollTop
 
-
-  const handleMouseDown = e => {
-    e.preventDefault()
-    if (currentTool === 'hand') {
-      const { offsetTop, offsetLeft } = ref.current
-      isMouseDown = true
-      startX = e.pageX - offsetLeft
-      startY = e.pageY - offsetTop
-      scrollLeft = ref.current.scrollLeft
-      scrollTop = ref.current.scrollTop
-    }
-  }
-
-  const handleMouseUp = e => {
-    e.preventDefault()
-    if (currentTool === 'hand') {
-      isMouseDown = false
-    }
-  }
-
-  const handleMouseLeave = e => {
-    e.preventDefault()
-    if (currentTool === 'hand') {
-      isMouseDown = false
-    }
-  }
-
-  const handleMouseMove = e => {
-    e.preventDefault()
-    const { offsetTop, offsetLeft } = ref.current
-
-    if (currentTool === 'hand') {
-      if (!isMouseDown) return
-      const x = e.pageX - offsetLeft
-      const y = e.pageY - offsetTop
-      const walkX = (x - startX) * 1.5
-      const walkY = (y - startY) * 1.5
-      ref.current.scrollLeft = scrollLeft - walkX
-      ref.current.scrollTop = scrollTop - walkY
-    }
-  }
-
   const maintainScrollToCenter = () => {
     const { clientHeight, clientWidth, scrollHeight, scrollWidth } = ref.current
     ref.current.scrollTop = (scrollHeight - clientHeight) / 2
     ref.current.scrollLeft = (scrollWidth - clientWidth) / 2
   }
 
-  const handleMouseDownCapture = event => {
+  const handleMouseDown = event => {
     clickRef.current = true
     targetRef.current = event.target
 
@@ -83,10 +41,17 @@ const Canvas = forwardRef((props, ref) => {
         screenIndex: parseInt(targetRef.current.dataset.screenIndex),
         componentIndex: parseInt(targetRef.current.dataset.componentIndex)
       })
+    } else if (currentTool === 'hand') {
+      const { offsetTop, offsetLeft } = ref.current
+      isMouseDown = true
+      startX = event.pageX - offsetLeft
+      startY = event.pageY - offsetTop
+      scrollLeft = ref.current.scrollLeft
+      scrollTop = ref.current.scrollTop
     }
   }
 
-  const handleMouseMoveCapture = event => {
+  const handleMouseMove = event => {
     if (currentTool === 'select' && clickRef.current && targetRef.current.dataset.allow === 'reposition') {
       const board = targetRef.current.parentElement.parentElement.getBoundingClientRect()
 
@@ -176,14 +141,27 @@ const Canvas = forwardRef((props, ref) => {
         screenIndex: parseInt(screenIndex),
         componentIndex: parseInt(componentIndex)
       })
+    } else if (currentTool === 'hand' && clickRef.current) {
+      const { offsetTop, offsetLeft } = ref.current
+      const x = event.clientX - offsetLeft
+      const y = event.clientY - offsetTop
+      const walkX = (x - startX) * 1.5
+      const walkY = (y - startY) * 1.5
+      ref.current.scrollLeft = scrollLeft - walkX
+      ref.current.scrollTop = scrollTop - walkY
     }
   } 
 
-  const handleMouseUpCapture = event => {
+  const handleMouseUp = event => {
     clickRef.current = false
     targetRef.current = null
   }
 
+  const handleMouseLeave = event => {
+    clickRef.current = false
+    targetRef.current = null
+  }
+  
   useEffect(() => {
     maintainScrollToCenter()
   }, [])
@@ -191,13 +169,10 @@ const Canvas = forwardRef((props, ref) => {
   return (
     <Container
       ref={ref}
-      // onMouseDown={handleMouseDown}
-      // onMouseMove={handleMouseMove}
-      // onMouseUp={handleMouseUp}
-      // onMouseLeave={handleMouseLeave}
-      onMouseDownCapture={handleMouseDownCapture}
-      onMouseMoveCapture={handleMouseMoveCapture}
-      onMouseUpCapture={handleMouseUpCapture}
+      onMouseDownCapture={handleMouseDown}
+      onMouseMoveCapture={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
       <DocumentArea>
         <Boards>
