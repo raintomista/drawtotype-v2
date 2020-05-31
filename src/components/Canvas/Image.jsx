@@ -6,8 +6,8 @@ import types from 'reducers/types'
 
 const Image = forwardRef((props, ref) => {
   const { state, dispatch } = useStateValue()
-  const [ selected, setSelected ] = useState(false)
-  const [ layout, setLayout ] = useState(null)
+  const [selected, setSelected] = useState(false)
+  const [layout, setLayout] = useState(null)
   const elementRef = useRef()
 
   const { zoomLevel } = state.canvas
@@ -57,6 +57,7 @@ const Image = forwardRef((props, ref) => {
 
   const container = css`
     position: absolute;
+    user-select: none;
   `
 
   const image = css`
@@ -66,14 +67,16 @@ const Image = forwardRef((props, ref) => {
     width: 100%;
     object-fit: cover;
     user-select: none;
+    pointer-events: none;
   `
-  
+
   return (
     <div
       style={layout}
       css={container}
       ref={elementRef}
       onClickCapture={handleClick}
+      draggable="false"
     >
       {selected && (
         <BoundingBox
@@ -86,6 +89,8 @@ const Image = forwardRef((props, ref) => {
       <img
         css={image}
         src={content.fileData}
+        onDragStart={event => event.preventDefault()}
+        draggable="false"
       />
     </div>
   )
