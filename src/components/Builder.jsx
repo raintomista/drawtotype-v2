@@ -56,7 +56,7 @@ const Builder = () => {
     document.addEventListener('keydown', keyboardShortcuts, true)
     
     return () => {
-      document.removeEventListener('keydown', zoomIn, true)
+      document.removeEventListener('keydown', keyboardShortcuts, true)
     }
   }, [])
 

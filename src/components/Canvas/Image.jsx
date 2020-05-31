@@ -10,6 +10,7 @@ const Image = forwardRef((props, ref) => {
   const [layout, setLayout] = useState(null)
   const elementRef = useRef()
 
+  const { zoomLevel } = state.canvas
   const { currentTool } = state.toolbar
   const { selectedScreen, selectedComponent } = state.sidebar
   const { screenIndex, componentIndex } = props
@@ -34,10 +35,10 @@ const Image = forwardRef((props, ref) => {
   useEffect(() => {
     setSelected(isSelected())
     setLayout({
-      width: dimension.width,
-      height: dimension.height,
-      left: positioning.posX,
-      top: positioning.posY
+      width: parseInt(dimension.width) * zoomLevel,
+      height: parseInt(dimension.height) * zoomLevel,
+      left: parseInt(positioning.posX) * zoomLevel,
+      top: parseInt(positioning.posY) * zoomLevel
     })
   }, [])
 
@@ -47,12 +48,12 @@ const Image = forwardRef((props, ref) => {
 
   useEffect(() => {
     setLayout({
-      width: dimension.width,
-      height: dimension.height,
-      left: positioning.posX,
-      top: positioning.posY
+      width: parseInt(dimension.width) * zoomLevel,
+      height: parseInt(dimension.height) * zoomLevel,
+      left: parseInt(positioning.posX) * zoomLevel,
+      top: parseInt(positioning.posY) * zoomLevel
     })
-  }, [dimension, positioning])
+  }, [positioning, zoomLevel])
 
 
   const container = css`
