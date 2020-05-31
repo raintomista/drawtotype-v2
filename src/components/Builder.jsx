@@ -25,7 +25,12 @@ const Container = styled.aside`
 const Builder = () => {
   const { state, dispatch } = useStateValue()
   const canvasRef = useRef()
+  const selectedRef = useRef({
+    screenIndex: null,
+    componentIndex: null
+  })
 
+  const { screens, selectedScreen, selectedComponent } = state.sidebar
   const { currentTool } = state.toolbar
   
   const keyboardShortcuts = event => {
@@ -48,17 +53,31 @@ const Builder = () => {
           type: 'TOOLBAR_SET_TOOL',
           currentTool: 'hand'
         })
+      } else if (keyCode === 'Delete') {
+        if (selectedRef.current.screenIndex !== null && selectedRef.current.componentIndex !== null) {
+          dispatch({
+            type: types.SIDEBAR_DELETE_COMPONENT,
+            screenIndex: selectedRef.current.screenIndex,
+            componentIndex: selectedRef.current.componentIndex
+          })
+        }
       }
     }
   }
 
   useEffect(() => {
     document.addEventListener('keydown', keyboardShortcuts, true)
-    
     return () => {
       document.removeEventListener('keydown', keyboardShortcuts, true)
     }
   }, [])
+
+  useEffect(() => {
+    selectedRef.current = {
+      screenIndex: selectedScreen,
+      componentIndex: selectedComponent
+    }
+  }, [selectedScreen, selectedComponent])
 
 
   return (
