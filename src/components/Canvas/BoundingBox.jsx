@@ -138,7 +138,12 @@ const BoundingBox = forwardRef((props, { imageRef, boardRef }) => {
   `
   
   return (
-    <div css={boundingBox}>
+    <div
+      css={boundingBox}
+      data-allow="reposition"
+      data-screen-index={selectedScreen}
+      data-component-index={selectedComponent}
+    >
       <ResizeHandle
         type="resizer-n"
         onMouseDown={handleMouseDown}

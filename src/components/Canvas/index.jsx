@@ -1,18 +1,23 @@
-import React, { forwardRef, useEffect } from 'react'
+import React, { forwardRef, useEffect, useRef } from 'react'
 import { useStateValue } from 'hooks/useStateValue'
 import DocumentArea from 'components/Canvas/DocumentArea'
 import Container from 'components/Canvas/Container'
 import Boards from 'components/Canvas/Boards'
 import Board from 'components/Canvas/Board'
+import types from 'reducers/types'
 
-const Canvas =  forwardRef((props, ref) => {
-  const { state  } = useStateValue()
+const Canvas = forwardRef((props, ref) => {
+  const { state, dispatch } = useStateValue()
+  const clickRef = useRef(false)
+  const offsetRef = useRef({ x: 0, y: 0 })
+  const targetRef = useRef(null)
+
   const { currentTool } = state.toolbar
 
   let isMouseDown = false
   let startX, startY, scrollLeft, scrollTop
 
-  
+
   const handleMouseDown = e => {
     e.preventDefault()
     if (currentTool === 'hand') {
@@ -24,14 +29,14 @@ const Canvas =  forwardRef((props, ref) => {
       scrollTop = ref.current.scrollTop
     }
   }
-  
+
   const handleMouseUp = e => {
     e.preventDefault()
     if (currentTool === 'hand') {
       isMouseDown = false
     }
   }
-  
+
   const handleMouseLeave = e => {
     e.preventDefault()
     if (currentTool === 'hand') {
@@ -42,7 +47,7 @@ const Canvas =  forwardRef((props, ref) => {
   const handleMouseMove = e => {
     e.preventDefault()
     const { offsetTop, offsetLeft } = ref.current
-    
+
     if (currentTool === 'hand') {
       if (!isMouseDown) return
       const x = e.pageX - offsetLeft
@@ -59,18 +64,63 @@ const Canvas =  forwardRef((props, ref) => {
     ref.current.scrollTop = (scrollHeight - clientHeight) / 2
     ref.current.scrollLeft = (scrollWidth - clientWidth) / 2
   }
-  
+
+  const handleMouseDownCapture = event => {
+    clickRef.current = true
+    targetRef.current = event.target
+
+    if (currentTool === 'select' && targetRef.current.dataset.allow === 'reposition') {
+      const target = targetRef.current.getBoundingClientRect()
+
+      /* Compute the offset between the origin of the click
+        and the origin of the target element */
+      offsetRef.current.x = event.clientX - target.x
+      offsetRef.current.y = event.clientY - target.y
+
+      /* Select target element when a click is detected */
+      dispatch({
+        type: types.SIDEBAR_SELECT_COMPONENT,
+        screenIndex: parseInt(targetRef.current.dataset.screenIndex),
+        componentIndex: parseInt(targetRef.current.dataset.componentIndex)
+      })
+    }
+  }
+
+  const handleMouseMoveCapture = event => {
+    if (currentTool === 'select' && clickRef.current && targetRef.current.dataset.allow === 'reposition') {
+      const board = targetRef.current.parentElement.parentElement.getBoundingClientRect()
+
+      /* Compute the new position of the target element by adding the offset between the initial
+        position of the cursor and the target element  to the current position of the cursor */
+      dispatch({
+        type: types.SIDEBAR_SET_COMPONENT_POSITION,
+        posX: event.clientX - board.x - offsetRef.current.x,
+        posY: event.clientY - board.y - offsetRef.current.y,
+        screenIndex: parseInt(targetRef.current.dataset.screenIndex),
+        componentIndex: parseInt(targetRef.current.dataset.componentIndex)
+      })
+    }
+  }
+
+  const handleMouseUpCapture = event => {
+    clickRef.current = false
+    targetRef.current = null
+  }
+
   useEffect(() => {
     maintainScrollToCenter()
   }, [])
 
   return (
     <Container
-    ref={ref}
-    onMouseDown={handleMouseDown}
-    onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
+      ref={ref}
+      // onMouseDown={handleMouseDown}
+      // onMouseMove={handleMouseMove}
+      // onMouseUp={handleMouseUp}
+      // onMouseLeave={handleMouseLeave}
+      onMouseDownCapture={handleMouseDownCapture}
+      onMouseMoveCapture={handleMouseMoveCapture}
+      onMouseUpCapture={handleMouseUpCapture}
     >
       <DocumentArea>
         <Boards>

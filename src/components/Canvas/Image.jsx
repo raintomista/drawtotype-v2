@@ -73,9 +73,6 @@ const Image = forwardRef((props, ref) => {
       style={layout}
       css={container}
       ref={elementRef}
-      data-allow="drag-to-move"
-      data-screen-index={screenIndex}
-      data-component-index={componentIndex}
       onClickCapture={handleClick}
     >
       {selected && (
