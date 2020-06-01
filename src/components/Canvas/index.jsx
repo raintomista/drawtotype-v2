@@ -9,7 +9,6 @@ import types from 'reducers/types'
 const Canvas = forwardRef((props, ref) => {
   const { state, dispatch } = useStateValue()
   const clickRef = useRef(false)
-  const offsetRef = useRef({ x: 0, y: 0 })
   const targetRef = useRef(null)
 
 
@@ -36,9 +35,12 @@ const Canvas = forwardRef((props, ref) => {
         const target = targetRef.current.getBoundingClientRect()
 
         /* Compute the offset between the origin of the click
-          and the origin of the target element */
-        offsetRef.current.x = event.clientX - target.x
-        offsetRef.current.y = event.clientY - target.y
+        and the origin of the target element */
+        setInitialMouse({
+          clicked: false,
+          offsetX: event.clientX - target.x,
+          offsetY: event.clientY - target.y
+        })
 
         /* Select target element when a click is detected */
         dispatch({
@@ -78,8 +80,8 @@ const Canvas = forwardRef((props, ref) => {
         position of the cursor and the target element  to the current position of the cursor */
       dispatch({
         type: types.SIDEBAR_SET_COMPONENT_POSITION,
-        posX: event.clientX - board.x - offsetRef.current.x,
-        posY: event.clientY - board.y - offsetRef.current.y,
+        posX: event.clientX - board.x - initialMouse.offsetX,
+        posY: event.clientY - board.y - initialMouse.offsetY,
         screenIndex: parseInt(targetRef.current.dataset.screenIndex),
         componentIndex: parseInt(targetRef.current.dataset.componentIndex)
       })
