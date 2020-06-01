@@ -1,169 +1,244 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { css } from '@emotion/core'
 import { useStateValue } from 'hooks/useStateValue'
-import DocumentArea from 'components/Canvas/DocumentArea'
-import Container from 'components/Canvas/Container'
-import Boards from 'components/Canvas/Boards'
-import Board from 'components/Canvas/Board'
 import types from 'reducers/types'
 
-const Canvas = forwardRef((props, ref) => {
+import DocumentArea from 'components/Canvas/DocumentArea'
+import Boards from 'components/Canvas/Boards'
+import Board from 'components/Canvas/Board'
+
+
+const Canvas = props => {
   const { state, dispatch } = useStateValue()
-  const clickRef = useRef(false)
-  const targetRef = useRef(null)
-
-
-  const [initialMouse, setInitialMouse] = useState(null)
   const [initialBoundingBox, setInitialBoundingBox] = useState(null)
+  const [initialMouse, setInitialMouse] = useState(null)
+  const targetRef = useRef()
+  const canvasRef = useRef()
 
+  const { screens } = state.sidebar
   const { currentTool } = state.toolbar
 
-  let isMouseDown = false
-  let startX, startY, scrollLeft, scrollTop
-
   const maintainScrollToCenter = () => {
-    const { clientHeight, clientWidth, scrollHeight, scrollWidth } = ref.current
-    ref.current.scrollTop = (scrollHeight - clientHeight) / 2
-    ref.current.scrollLeft = (scrollWidth - clientWidth) / 2
+    const { clientHeight, clientWidth, scrollHeight, scrollWidth } = canvasRef.current
+    canvasRef.current.scrollTop = (scrollHeight - clientHeight) / 2
+    canvasRef.current.scrollLeft = (scrollWidth - clientWidth) / 2
   }
 
   const handleMouseDown = event => {
-    clickRef.current = true
     targetRef.current = event.target
 
     if (currentTool === 'select') {
-      if (targetRef.current.dataset.allow === 'reposition') {
-        const target = targetRef.current.getBoundingClientRect()
+      if (targetRef.current.dataset.reposition) {
+        const { screenIndex, componentIndex } = targetRef.current.dataset
+        const selectedComponent = targetRef.current.parentElement.getBoundingClientRect()
 
         /* Compute the offset between the origin of the click
         and the origin of the target element */
         setInitialMouse({
-          clicked: false,
-          offsetX: event.clientX - target.x,
-          offsetY: event.clientY - target.y
+          clicked: true,
+          offsetX: event.clientX - selectedComponent.x,
+          offsetY: event.clientY - selectedComponent.y
         })
 
         /* Select target element when a click is detected */
         dispatch({
           type: types.SIDEBAR_SELECT_COMPONENT,
-          screenIndex: parseInt(targetRef.current.dataset.screenIndex),
-          componentIndex: parseInt(targetRef.current.dataset.componentIndex)
+          screenIndex: parseInt(screenIndex),
+          componentIndex: parseInt(componentIndex)
         })
+      } else if (targetRef.current.dataset.resizer) {
+        const boundingBox = targetRef.current.parentElement.getBoundingClientRect()
+
+        /* Store the origin of the targeted resizer */
+        setInitialMouse({
+          clicked: true,
+          clientX: event.clientX,
+          clientY: event.clientY
+        })
+
+        /* Store the dimension and position 
+          of the targeted bounding box */
+        setInitialBoundingBox(boundingBox)
       } else if (targetRef.current.dataset.deselect) {
         dispatch({
           type: types.SIDEBAR_SELECT_COMPONENT,
           screenIndex: null,
           componentIndex: null
         })
-      } else if (targetRef.current.dataset.resizer) {
-        setInitialMouse({
-          clicked: true,
-          clientX: event.clientX,
-          clientY: event.clientY
-        })
-        setInitialBoundingBox(event.target.parentElement.getBoundingClientRect())
       }
     } else if (currentTool === 'hand') {
-      const { offsetTop, offsetLeft } = ref.current
-      isMouseDown = true
-      startX = event.pageX - offsetLeft
-      startY = event.pageY - offsetTop
-      scrollLeft = ref.current.scrollLeft
-      scrollTop = ref.current.scrollTop
+      const canvas = canvasRef.current.getBoundingClientRect()
+      setInitialMouse({
+        clicked: true,
+        offsetX: event.clientX - canvas.x,
+        offsetY: event.clientY - canvas.y,
+        scrollLeft: canvasRef.current.scrollLeft,
+        scrollTop: canvasRef.current.scrollTop
+      })
     }
   }
 
   const handleMouseMove = event => {
-    if (currentTool === 'select' && clickRef.current && targetRef.current.dataset.allow === 'reposition') {
-      const board = targetRef.current.parentElement.parentElement.getBoundingClientRect()
+    if (initialMouse && initialMouse.clicked) {
+      if (currentTool === 'select' && targetRef.current.dataset.reposition) {
+        const { screenIndex, componentIndex } = targetRef.current.dataset
+        const selectedComponent = targetRef.current.parentElement
+        const board = selectedComponent.parentElement.getBoundingClientRect()
 
-      /* Compute the new position of the target element by adding the offset between the initial
-        position of the cursor and the target element  to the current position of the cursor */
-      dispatch({
-        type: types.SIDEBAR_SET_COMPONENT_POSITION,
-        posX: event.clientX - board.x - initialMouse.offsetX,
-        posY: event.clientY - board.y - initialMouse.offsetY,
-        screenIndex: parseInt(targetRef.current.dataset.screenIndex),
-        componentIndex: parseInt(targetRef.current.dataset.componentIndex)
-      })
-    } else if (currentTool === 'select' && clickRef.current && targetRef.current.dataset.resizer) {
-      const boundingBox = targetRef.current.parentElement
-      const component = boundingBox.parentElement
-      const board = component.parentElement
+        /* Compute the new position of the target element by adding the offset between the initial
+          position of the cursor and the target element  to the current position of the cursor */
+        dispatch({
+          type: types.SIDEBAR_SET_COMPONENT_POSITION,
+          posX: event.clientX - board.x - initialMouse.offsetX,
+          posY: event.clientY - board.y - initialMouse.offsetY,
+          screenIndex: parseInt(screenIndex),
+          componentIndex: parseInt(componentIndex)
+        })
+      } else if (currentTool === 'select' && targetRef.current.dataset.resizer) {
+        const { screenIndex, componentIndex } = targetRef.current.parentElement.dataset
+        const boundingBox = targetRef.current.parentElement
+        const selectedComponent = boundingBox.parentElement
+        const board = selectedComponent.parentElement.getBoundingClientRect()
 
-      const { screenIndex, componentIndex } = boundingBox.dataset
-      const boardRect = board.getBoundingClientRect()
+        let newHeight, newWidth, newPosX, newPosY
 
-      let newHeight, newWidth, newPosX, newPosY
+        switch (targetRef.current.dataset.resizerType) {
+          case 'resizer-nw':
+            newHeight = initialBoundingBox.height - (event.clientY - initialMouse.clientY)
+            newWidth = initialBoundingBox.width - (event.clientX - initialMouse.clientX)
+            newPosX = (initialBoundingBox.x - board.x) + (event.clientX - initialMouse.clientX)
+            newPosY = (initialBoundingBox.y - board.y) + (event.clientY - initialMouse.clientY)
+            break
+          case 'resizer-n':
+            newHeight = initialBoundingBox.height - (event.clientY - initialMouse.clientY)
+            newWidth = initialBoundingBox.width
+            newPosX = initialBoundingBox.x - board.x
+            newPosY = (initialBoundingBox.y - board.y) + (event.clientY - initialMouse.clientY)
+            break
+          case 'resizer-ne':
+            newHeight = initialBoundingBox.height - (event.clientY - initialMouse.clientY)
+            newWidth = initialBoundingBox.width + (event.clientX - initialMouse.clientX)
+            newPosX = initialBoundingBox.x - board.x
+            newPosY = (initialBoundingBox.y - board.y) + (event.clientY - initialMouse.clientY)
+            break
+          case 'resizer-w':
+            newHeight = initialBoundingBox.height
+            newWidth = initialBoundingBox.width - (event.clientX - initialMouse.clientX)
+            newPosX = (initialBoundingBox.x - board.x) + (event.clientX - initialMouse.clientX)
+            newPosY = initialBoundingBox.y - board.y
+            break
+          case 'resizer-e':
+            newHeight = initialBoundingBox.height
+            newWidth = initialBoundingBox.width + (event.clientX - initialMouse.clientX)
+            newPosX = initialBoundingBox.x - board.x
+            newPosY = initialBoundingBox.y - board.y
+            break
+          case 'resizer-sw':
+            newHeight = initialBoundingBox.height + (event.clientY - initialMouse.clientY)
+            newWidth = initialBoundingBox.width - (event.clientX - initialMouse.clientX)
+            newPosX = (initialBoundingBox.x - board.x) + (event.clientX - initialMouse.clientX)
+            newPosY = initialBoundingBox.y - board.y
+            break
+          case 'resizer-s':
+            newHeight = initialBoundingBox.height + (event.clientY - initialMouse.clientY)
+            newWidth = initialBoundingBox.width
+            newPosX = initialBoundingBox.x - board.x
+            newPosY = initialBoundingBox.y - board.y
+            break
+          case 'resizer-se':
+            newHeight = initialBoundingBox.height + (event.clientY - initialMouse.clientY)
+            newWidth = initialBoundingBox.width + (event.clientX - initialMouse.clientX)
+            newPosX = initialBoundingBox.x - board.x
+            newPosY = initialBoundingBox.y - board.y
+            break
+        }
 
-      switch (targetRef.current.dataset.resizerType) {
-        case 'resizer-n':
-          newHeight = initialBoundingBox.height - (event.clientY - initialMouse.clientY)
-          newWidth = initialBoundingBox.width
-          newPosX =  initialBoundingBox.x - boardRect.x
-          newPosY = (initialBoundingBox.y - boardRect.y) + (event.clientY - initialMouse.clientY)
-          break
-        case 'resizer-w':
-          newHeight = initialBoundingBox.height
-          newWidth = initialBoundingBox.width - (event.clientX - initialMouse.clientX)
-          newPosX = (initialBoundingBox.x - boardRect.x) + (event.clientX - initialMouse.clientX)
-          newPosY = initialBoundingBox.y - boardRect.y
-          break
-        case 'resizer-e':
-          newHeight = initialBoundingBox.height
-          newWidth = initialBoundingBox.width + (event.clientX - initialMouse.clientX)
-          newPosX = initialBoundingBox.x - boardRect.x
-          newPosY = initialBoundingBox.y - boardRect.y
-          break
-        case 'resizer-s':
-          newHeight = initialBoundingBox.height + (event.clientY - initialMouse.clientY)
-          newWidth = initialBoundingBox.width
-          newPosX = initialBoundingBox.x - boardRect.x
-          newPosY = initialBoundingBox.y - boardRect.y
-          break
+        // Prevent negative height when resizing the selected component
+        newHeight = newHeight < 0 ? 0 : newHeight
+
+        // Prevent negative width when resizing the selected component
+        newWidth = newWidth < 0 ? 0 : newWidth
+
+        // Limits to the bounds of the selected component when resizing
+        newPosX = newPosX > initialBoundingBox.right - board.left
+          ? initialBoundingBox.right - board.left : newPosX
+
+        // Limits to the bounds of the selected component when resizing
+        newPosY = newPosY > initialBoundingBox.bottom - board.top
+          ? initialBoundingBox.bottom - board.top : newPosY
+
+        dispatch({
+          type: types.SIDEBAR_SET_COMPONENT_DIMENSION,
+          height: newHeight,
+          width: newWidth,
+          screenIndex: parseInt(screenIndex),
+          componentIndex: parseInt(componentIndex)
+        })
+
+        dispatch({
+          type: types.SIDEBAR_SET_COMPONENT_POSITION,
+          posX: newPosX,
+          posY: newPosY,
+          screenIndex: parseInt(screenIndex),
+          componentIndex: parseInt(componentIndex)
+        })
+      } else if (currentTool === 'hand') {
+        const canvas = canvasRef.current.getBoundingClientRect()
+        const mouseX = event.clientX - canvas.x
+        const mouseY = event.clientY - canvas.y
+        const walkX = (mouseX - initialMouse.offsetX) * 1.5
+        const walkY = (mouseY - initialMouse.offsetY) * 1.5
+        canvasRef.current.scrollLeft = initialMouse.scrollLeft - walkX
+        canvasRef.current.scrollTop = initialMouse.scrollTop - walkY
       }
-      dispatch({
-        type: types.SIDEBAR_SET_COMPONENT_DIMENSION,
-        height: newHeight > 0 ? newHeight : 0,
-        width: newWidth > 0 ? newWidth : 0,
-        screenIndex: parseInt(screenIndex),
-        componentIndex: parseInt(componentIndex)
-      })
-
-      dispatch({
-        type: types.SIDEBAR_SET_COMPONENT_POSITION,
-        posX: newPosX < initialBoundingBox.right - boardRect.left ? newPosX : initialBoundingBox.right - boardRect.left,
-        posY: newPosY < initialBoundingBox.bottom - boardRect.top ? newPosY : initialBoundingBox.bottom - boardRect.top,
-        screenIndex: parseInt(screenIndex),
-        componentIndex: parseInt(componentIndex)
-      })
-    } else if (currentTool === 'hand' && clickRef.current) {
-      const { offsetTop, offsetLeft } = ref.current
-      const x = event.clientX - offsetLeft
-      const y = event.clientY - offsetTop
-      const walkX = (x - startX) * 1.5
-      const walkY = (y - startY) * 1.5
-      ref.current.scrollLeft = scrollLeft - walkX
-      ref.current.scrollTop = scrollTop - walkY
     }
-  } 
+  }
 
-  const handleMouseUp = event => {
-    clickRef.current = false
+  const handleMouseUp = () => {
+    setInitialMouse(null)
+    setInitialBoundingBox(null)
     targetRef.current = null
   }
 
-  const handleMouseLeave = event => {
-    clickRef.current = false
+  const handleMouseLeave = () => {
+    setInitialMouse(null)
+    setInitialBoundingBox(null)
     targetRef.current = null
   }
-  
+
   useEffect(() => {
     maintainScrollToCenter()
   }, [])
 
+  const canvasContainer = css`
+    grid-area: canvas;
+    max-height: 100vh;
+    max-width: 100%;
+    overflow: scroll;
+    position: relative;
+    &.hand-tool-enabled {
+      cursor: grab;
+    }
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(40, 40, 40, 0.8);
+      border-radius: 10px;
+    }
+  `
+
   return (
-    <Container
-      ref={ref}
+    <div
+      ref={canvasRef}
+      css={canvasContainer}
       className={currentTool === 'hand' ? 'hand-tool-enabled' : ''}
       onMouseDownCapture={handleMouseDown}
       onMouseMoveCapture={handleMouseMove}
@@ -172,7 +247,7 @@ const Canvas = forwardRef((props, ref) => {
     >
       <DocumentArea data-deselect={true}>
         <Boards>
-          {state.sidebar.screens.map((screen, screenIndex) => (
+          {screens.map((screen, screenIndex) => (
             <Board
               key={screenIndex}
               screenIndex={screenIndex}
@@ -181,8 +256,8 @@ const Canvas = forwardRef((props, ref) => {
           ))}
         </Boards>
       </DocumentArea>
-    </Container>
+    </div>
   )
-})
+}
 
 export default Canvas

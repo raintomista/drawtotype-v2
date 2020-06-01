@@ -24,7 +24,6 @@ const Container = styled.aside`
 
 const Builder = () => {
   const { state, dispatch } = useStateValue()
-  const canvasRef = useRef()
   const selectedRef = useRef({
     screenIndex: null,
     componentIndex: null
@@ -84,7 +83,7 @@ const Builder = () => {
     <Container currentTool={currentTool}>
       <Sidebar />
       <Toolbar />
-      <Canvas ref={canvasRef} />
+      <Canvas/>
       <Inspector />
     </Container>
   )

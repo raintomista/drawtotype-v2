@@ -118,7 +118,7 @@ const BoundingBox = forwardRef((props, { imageRef, boardRef }) => {
   return (
     <div
       css={boundingBox}
-      data-allow="reposition"
+      data-reposition={true}
       data-screen-index={selectedScreen}
       data-component-index={selectedComponent}
     >
