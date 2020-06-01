@@ -17,6 +17,7 @@ const Canvas = props => {
 
   const { screens } = state.sidebar
   const { currentTool } = state.toolbar
+  const { zoomLevel } = state.canvas
 
   const maintainScrollToCenter = () => {
     const { clientHeight, clientWidth, scrollHeight, scrollWidth } = canvasRef.current
@@ -89,8 +90,8 @@ const Canvas = props => {
           position of the cursor and the target element  to the current position of the cursor */
         dispatch({
           type: types.SIDEBAR_SET_COMPONENT_POSITION,
-          posX: event.clientX - board.x - initialMouse.offsetX,
-          posY: event.clientY - board.y - initialMouse.offsetY,
+          posX: (event.clientX - board.x - initialMouse.offsetX) / zoomLevel,
+          posY: (event.clientY - board.y - initialMouse.offsetY) / zoomLevel,
           screenIndex: parseInt(screenIndex),
           componentIndex: parseInt(componentIndex)
         })
@@ -169,16 +170,16 @@ const Canvas = props => {
 
         dispatch({
           type: types.SIDEBAR_SET_COMPONENT_DIMENSION,
-          height: newHeight,
-          width: newWidth,
+          height: newHeight / zoomLevel,
+          width: newWidth / zoomLevel,
           screenIndex: parseInt(screenIndex),
           componentIndex: parseInt(componentIndex)
         })
 
         dispatch({
           type: types.SIDEBAR_SET_COMPONENT_POSITION,
-          posX: newPosX,
-          posY: newPosY,
+          posX: newPosX / zoomLevel,
+          posY: newPosY / zoomLevel,
           screenIndex: parseInt(screenIndex),
           componentIndex: parseInt(componentIndex)
         })
