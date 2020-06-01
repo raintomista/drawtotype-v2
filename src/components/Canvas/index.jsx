@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { useStateValue } from 'hooks/useStateValue'
 import DocumentArea from 'components/Canvas/DocumentArea'
 import Container from 'components/Canvas/Container'
@@ -11,6 +11,10 @@ const Canvas = forwardRef((props, ref) => {
   const clickRef = useRef(false)
   const offsetRef = useRef({ x: 0, y: 0 })
   const targetRef = useRef(null)
+
+
+  const [initialMouse, setInitialMouse] = useState(null)
+  const [initialBoundingBox, setInitialBoundingBox] = useState(null)
 
   const { currentTool } = state.toolbar
 
@@ -48,6 +52,13 @@ const Canvas = forwardRef((props, ref) => {
           screenIndex: null,
           componentIndex: null
         })
+      } else if (targetRef.current.dataset.resizer) {
+        setInitialMouse({
+          clicked: true,
+          clientX: event.clientX,
+          clientY: event.clientY
+        })
+        setInitialBoundingBox(event.target.parentElement.getBoundingClientRect())
       }
     } else if (currentTool === 'hand') {
       const { offsetTop, offsetLeft } = ref.current
@@ -78,74 +89,48 @@ const Canvas = forwardRef((props, ref) => {
       const board = component.parentElement
 
       const { screenIndex, componentIndex } = boundingBox.dataset
-      const componentRect = component.getBoundingClientRect()
       const boardRect = board.getBoundingClientRect()
 
       let newHeight, newWidth, newPosX, newPosY
 
       switch (targetRef.current.dataset.resizerType) {
-        case 'resizer-nw':
-          newHeight = (componentRect.y + componentRect.height) - event.clientY
-          newWidth = (componentRect.x + componentRect.width) - event.clientX
-          newPosX = event.clientX - boardRect.left
-          newPosY = event.clientY - boardRect.top
-          break
         case 'resizer-n':
-          newHeight = (componentRect.y + componentRect.height) - event.clientY
-          newWidth = componentRect.width
-          newPosX = componentRect.left - boardRect.left
-          newPosY = event.clientY - boardRect.top
-          break
-        case 'resizer-ne':
-          newHeight = (componentRect.y + componentRect.height) - event.clientY
-          newWidth = event.clientX - componentRect.left
-          newPosX = componentRect.left - boardRect.left
-          newPosY = event.clientY - boardRect.top
+          newHeight = initialBoundingBox.height - (event.clientY - initialMouse.clientY)
+          newWidth = initialBoundingBox.width
+          newPosX =  initialBoundingBox.x - boardRect.x
+          newPosY = (initialBoundingBox.y - boardRect.y) + (event.clientY - initialMouse.clientY)
           break
         case 'resizer-w':
-          newHeight = componentRect.height
-          newWidth = (componentRect.x + componentRect.width) - event.clientX
-          newPosX = event.clientX - boardRect.left
-          newPosY = componentRect.top - boardRect.top
+          newHeight = initialBoundingBox.height
+          newWidth = initialBoundingBox.width - (event.clientX - initialMouse.clientX)
+          newPosX = (initialBoundingBox.x - boardRect.x) + (event.clientX - initialMouse.clientX)
+          newPosY = initialBoundingBox.y - boardRect.y
           break
         case 'resizer-e':
-          newHeight = componentRect.height
-          newWidth = event.clientX - componentRect.left
-          newPosX = componentRect.left - boardRect.left
-          newPosY = componentRect.top - boardRect.top
-          break
-        case 'resizer-sw':
-          newHeight = event.clientY - componentRect.top
-          newWidth = (componentRect.x + componentRect.width) - event.clientX
-          newPosX = event.clientX - boardRect.left
-          newPosY = componentRect.top - boardRect.top
+          newHeight = initialBoundingBox.height
+          newWidth = initialBoundingBox.width + (event.clientX - initialMouse.clientX)
+          newPosX = initialBoundingBox.x - boardRect.x
+          newPosY = initialBoundingBox.y - boardRect.y
           break
         case 'resizer-s':
-          newHeight = event.clientY - componentRect.top
-          newWidth = componentRect.width
-          newPosX = componentRect.left - boardRect.left
-          newPosY = componentRect.top - boardRect.top
-          break
-        case 'resizer-se':
-          newHeight = event.clientY - componentRect.top
-          newWidth = event.clientX - componentRect.left
-          newPosX = componentRect.left - boardRect.left
-          newPosY = componentRect.top - boardRect.top
+          newHeight = initialBoundingBox.height + (event.clientY - initialMouse.clientY)
+          newWidth = initialBoundingBox.width
+          newPosX = initialBoundingBox.x - boardRect.x
+          newPosY = initialBoundingBox.y - boardRect.y
           break
       }
-
       dispatch({
         type: types.SIDEBAR_SET_COMPONENT_DIMENSION,
-        height: newHeight,
-        width: newWidth,
+        height: newHeight > 0 ? newHeight : 0,
+        width: newWidth > 0 ? newWidth : 0,
         screenIndex: parseInt(screenIndex),
         componentIndex: parseInt(componentIndex)
       })
 
       dispatch({
         type: types.SIDEBAR_SET_COMPONENT_POSITION,
-        posX: newPosX,
-        posY: newPosY,
+        posX: newPosX < initialBoundingBox.right - boardRect.left ? newPosX : initialBoundingBox.right - boardRect.left,
+        posY: newPosY < initialBoundingBox.bottom - boardRect.top ? newPosY : initialBoundingBox.bottom - boardRect.top,
         screenIndex: parseInt(screenIndex),
         componentIndex: parseInt(componentIndex)
       })
