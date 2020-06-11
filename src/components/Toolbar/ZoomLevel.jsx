@@ -1,4 +1,4 @@
-import React from 'React'
+import React from 'react'
 import styled from '@emotion/styled'
 import { useStateValue } from 'hooks/useStateValue'
 import types from 'reducers/types'

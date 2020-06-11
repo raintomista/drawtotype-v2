@@ -192,6 +192,18 @@ const Canvas = props => {
         canvasRef.current.scrollLeft = initialMouse.scrollLeft - walkX
         canvasRef.current.scrollTop = initialMouse.scrollTop - walkY
       }
+    } else {
+      const { offsetLeft, offsetTop } = canvasRef.current
+      const { scrollLeft, scrollTop } = canvasRef.current
+
+      const posX = (event.clientX - offsetLeft) + scrollLeft
+      const posY = (event.clientY - offsetTop) + scrollTop
+
+      dispatch({
+        type: types.INSPECTOR_SET_POSITION,
+        posX: posX,
+        posY: posY
+      })
     }
   }
 

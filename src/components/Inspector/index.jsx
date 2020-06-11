@@ -1,4 +1,4 @@
-import React from 'React'
+import React from 'react'
 import styled from '@emotion/styled'
 import Layout from 'components/Inspector/Layout'
 import Content from 'components/Inspector/Content'
@@ -20,12 +20,7 @@ const Inspector = () => {
   const { component } = useSidebarState()
   return (
     <Container>
-      {component && (
-        <React.Fragment>
-          <Layout/>
-          <Content/>
-        </React.Fragment>
-      )}
+      <Layout/>
     </Container>
   )
 }
